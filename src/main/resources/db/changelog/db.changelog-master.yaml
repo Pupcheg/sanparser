@@ -1,0 +1,4 @@
+databaseChangeLog:
+  - include:
+      file: scheme/1-identified-uri.sql
+      relativeToChangelogFile: true

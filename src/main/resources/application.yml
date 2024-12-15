@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: 'sanparser'
+  liquibase:
+    url: 'jdbc:h2:file:./db'
+  r2dbc:
+    url: 'r2dbc:h2:file:///./db'
+santech:
+  catalog-uri: 'file:/C:/Users/Supcheg/in/santech_catalog.xml'
+  associations:
+    analogues-uri: 'https://www.santech.ru/catalog/getVariantAnalogFull/'
+    variants-uri: 'https://www.santech.ru/catalog/getVariantAssoc/'
