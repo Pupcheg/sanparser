@@ -1,31 +1,31 @@
 package me.supcheg.sanparser.uri.recognizer;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.buffer.DataBuffer;
-import org.springframework.core.io.buffer.DataBufferFactory;
-import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
-import java.nio.file.FileSystemNotFoundException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Optional;
 
-@RequiredArgsConstructor
 @Component
 public class FileUriRecognizer implements UriRecognizer {
-    private final DataBufferFactory dataBufferFactory;
 
     @Override
-    public Flux<DataBuffer> recognize(URI uri) throws UnsupportedUriException {
-        Path path;
+    public boolean canRecognize(URI uri) {
+        return uri.getScheme().equals("file");
+    }
 
-        try {
-            path = Path.of(uri);
-        } catch (FileSystemNotFoundException e) {
-            throw new UnsupportedUriException(e);
-        }
+    @Override
+    public Optional<InputStream> recognize(URI uri) throws IOException {
+        Path path = Path.of(uri);
+        return Files.notExists(path) ?
+                Optional.empty() :
+                Optional.of(Files.newInputStream(path));
+    }
 
-        return DataBufferUtils.read(path, dataBufferFactory, 1024);
+    public Object save(Object o) {
+        return o;
     }
 }

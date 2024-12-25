@@ -1,16 +1,13 @@
 package me.supcheg.sanparser.uri.recognizer;
 
-import lombok.experimental.StandardException;
-import org.springframework.core.io.buffer.DataBuffer;
-import reactor.core.publisher.Flux;
-
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.util.Optional;
 
 public interface UriRecognizer {
 
-    Flux<DataBuffer> recognize(URI uri) throws UnsupportedUriException;
+    boolean canRecognize(URI uri);
 
-    @StandardException
-    class UnsupportedUriException extends Exception {
-    }
+    Optional<InputStream> recognize(URI uri) throws IOException;
 }

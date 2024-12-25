@@ -7,11 +7,10 @@ import me.supcheg.sanparser.uri.UriParser;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.util.Objects;
+import java.util.Optional;
 
 import static java.util.function.Predicate.not;
 
@@ -22,24 +21,25 @@ public class ParsingSantechIdentifierResolver implements SantechIdentifierResolv
     private final ObjectMapper objectMapper;
 
     @Override
-    public Mono<SantechIdentifier> resolveSantechIdentifier(URI uri) {
-        return Mono.just(uri)
-                .flatMap(uriParser::parse)
+    public Optional<SantechIdentifier> resolveSantechIdentifier(URI uri) {
+        return uriParser.parse(uri)
                 .flatMap(document ->
-                        Mono.zip(
-                                selectNumber(document),
-                                selectFullId(document),
-                                (number, defaultPostData) -> new SantechIdentifier(
-                                        number,
-                                        defaultPostData.variant_id(),
-                                        defaultPostData.item_id()
+                        selectNumber(document)
+                                .flatMap(number ->
+                                        selectFullId(document)
+                                                .map(defaultPostData ->
+                                                        new SantechIdentifier(
+                                                                number,
+                                                                defaultPostData.variant_id(),
+                                                                defaultPostData.item_id()
+                                                        )
+                                                )
                                 )
-                        )
                 );
     }
 
-    private Mono<String> selectNumber(Document document) {
-        return Flux.fromIterable(document.getAllElements())
+    private Optional<String> selectNumber(Document document) {
+        return document.getAllElements().stream()
                 .filter(element -> element.ownText().strip().equals("Номенклатурный номер"))
                 .map(element -> {
                     Element sibling = element.nextElementSibling();
@@ -50,16 +50,16 @@ public class ParsingSantechIdentifierResolver implements SantechIdentifierResolv
 
                     return numberElement.ownText().strip();
                 })
-                .next();
+                .findFirst();
     }
 
-    private Mono<DefaultPostData> selectFullId(Document document) {
-        return Flux.fromIterable(document.getAllElements())
+    private Optional<DefaultPostData> selectFullId(Document document) {
+        return document.getAllElements().stream()
                 .filter(element -> element.className().strip().equalsIgnoreCase("ss-catalog-products-slider"))
                 .map(element -> element.attr("data-catalog-products-slider__options"))
                 .filter(not(String::isEmpty))
                 .map(this::readPostData)
-                .next();
+                .findFirst();
     }
 
     @SneakyThrows

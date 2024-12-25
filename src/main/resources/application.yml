@@ -1,12 +1,19 @@
 spring:
+  main:
+    web-application-type: none
   application:
-    name: 'sanparser'
-  liquibase:
-    url: 'jdbc:h2:file:./db'
-  r2dbc:
-    url: 'r2dbc:h2:file:///./db'
+    name: sanparser
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: root
+    password: root
+  jpa:
+    properties:
+      hibernate:
+        default_schema: sanparser
 santech:
-  catalog-uri: 'file:/C:/Users/Supcheg/in/santech_catalog.xml'
+  catalog-uri: file:/C:/Users/Supcheg/in/santech_catalog.xml
   associations:
-    analogues-uri: 'https://www.santech.ru/catalog/getVariantAnalogFull/'
-    variants-uri: 'https://www.santech.ru/catalog/getVariantAssoc/'
+    analogues-uri: https://www.santech.ru/catalog/getVariantAnalogFull/
+    associations-uri: https://www.santech.ru/catalog/getVariantAssoc/

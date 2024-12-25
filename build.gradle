@@ -2,44 +2,32 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.0'
     id 'io.spring.dependency-management' version '1.1.6'
-    id 'org.graalvm.buildtools.native' version '0.10.3'
 }
 
 group = 'me.supcheg'
-version = '0.0.1-SNAPSHOT'
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
+version = '1.0.0'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.liquibase:liquibase-core'
-    implementation 'org.springframework:spring-jdbc'
-    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    implementation 'org.jsoup:jsoup:1.17.2'
+    implementation 'me.tongfei:progressbar:0.10.0'
+    implementation 'com.pivovarit:parallel-collectors:3.2.0'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
-    implementation 'io.projectreactor:reactor-tools'
-    implementation 'org.jsoup:jsoup:1.17.2'
-    implementation 'io.r2dbc:r2dbc-h2:1.0.0.RELEASE'
-
-    implementation 'org.mapstruct:mapstruct:1.6.2'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.2'
-
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'io.projectreactor:reactor-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    runtimeOnly 'org.postgresql:postgresql'
 }
 
-test {
-    useJUnitPlatform()
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }

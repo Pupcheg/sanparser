@@ -1,29 +1,26 @@
 package me.supcheg.sanparser.uri.recognizer;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.stereotype.Component;
-import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.util.Optional;
 
-@RequiredArgsConstructor
 @Component
 public class WebUriRecognizer implements UriRecognizer {
-    private final WebClient webClient;
+    @Override
+    public boolean canRecognize(URI uri) {
+        return uri.getScheme().equals("http") || uri.getScheme().equals("https");
+    }
 
     @Override
-    public Flux<DataBuffer> recognize(URI uri) throws UnsupportedUriException {
+    public Optional<InputStream> recognize(URI uri) throws IOException {
         try {
-            return webClient.get()
-                    .uri(uri)
-                    .exchangeToFlux(clientResponse -> clientResponse
-                            .body((httpResponse, ctx) ->
-                                    httpResponse.getBody()
-                            ));
-        } catch (Exception e) {
-            throw new UnsupportedUriException(e);
+            return Optional.of(uri.toURL().openStream());
+        } catch (FileNotFoundException e) {
+            return Optional.empty();
         }
     }
 }

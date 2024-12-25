@@ -3,10 +3,9 @@ package me.supcheg.sanparser.uri;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Component
@@ -16,15 +15,19 @@ public class ParsingSantechUriSource implements SantechUriSource {
     private URI catalog;
 
     @Override
-    public Flux<URI> uris() {
-        return Mono.just(catalog)
-                .flatMap(uriParser::parse)
-                .flatMapMany(document ->
-                        Flux.fromIterable(document.getAllElements())
+    public Stream<URI> uris() {
+        return uriParser.parse(catalog)
+                .map(document ->
+                        document.getAllElements().stream()
                                 .filter(element -> element.tagName().equalsIgnoreCase("url"))
                                 .map(element -> URI.create(element.ownText().strip()))
-                                .take(10)
-                );
+                )
+                .orElseGet(Stream::empty);
+    }
+
+    @Override
+    public long size() {
+        return uris().count();
     }
 
 }

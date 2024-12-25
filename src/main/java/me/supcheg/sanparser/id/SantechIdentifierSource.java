@@ -1,7 +1,7 @@
 package me.supcheg.sanparser.id;
 
-import reactor.core.publisher.Flux;
+import java.util.stream.Stream;
 
 public interface SantechIdentifierSource {
-    Flux<SantechIdentifier> santechIdentifiers();
+    Stream<SantechIdentifier> santechIdentifiers();
 }

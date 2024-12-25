@@ -1,9 +1,8 @@
 package me.supcheg.sanparser.id;
 
-import reactor.core.publisher.Mono;
-
 import java.net.URI;
+import java.util.Optional;
 
 public interface SantechIdentifierResolver {
-    Mono<SantechIdentifier> resolveSantechIdentifier(URI uri);
+    Optional<SantechIdentifier> resolveSantechIdentifier(URI uri);
 }

@@ -7,6 +7,6 @@ import java.util.List;
 public record AssociatedItem(
         SantechIdentifier identifier,
         List<SantechIdentifier> analogues,
-        List<SantechIdentifier> variants
+        List<SantechIdentifier> associations
 ) {
 }

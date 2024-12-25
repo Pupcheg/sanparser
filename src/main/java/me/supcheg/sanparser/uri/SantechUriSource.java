@@ -1,9 +1,10 @@
 package me.supcheg.sanparser.uri;
 
-import reactor.core.publisher.Flux;
-
 import java.net.URI;
+import java.util.stream.Stream;
 
 public interface SantechUriSource {
-    Flux<URI> uris();
+    Stream<URI> uris();
+
+    long size();
 }

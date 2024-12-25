@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.0.0
+      author: supcheg
+      changes:
+        - sqlFile:
+            relativeToChangelogFile: true
+            path: 0-schema.sql
+        - sqlFile:
+            relativeToChangelogFile: true
+            path: 1-analogues.sql
+        - sqlFile:
+            relativeToChangelogFile: true
+            path: 2-associations.sql
+        - sqlFile:
+            relativeToChangelogFile: true
+            path: 3-identified-uri.sql
+        - sqlFile:
+            relativeToChangelogFile: true
+            path: 4-downloaded-url.sql

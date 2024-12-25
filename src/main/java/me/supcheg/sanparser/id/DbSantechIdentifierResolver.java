@@ -1,43 +1,31 @@
 package me.supcheg.sanparser.id;
 
 import lombok.RequiredArgsConstructor;
-import me.supcheg.sanparser.data.IdentifiedUri;
-import me.supcheg.sanparser.data.IdentifiedUriMapper;
-import me.supcheg.sanparser.data.IdentifiedUriRepository;
+import me.supcheg.sanparser.data.uri.IdentifiedUri;
+import me.supcheg.sanparser.data.uri.IdentifiedUriRepository;
 import org.springframework.context.annotation.Primary;
-import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
 import java.net.URI;
-import java.util.function.Function;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Primary
 @Component
 public class DbSantechIdentifierResolver implements SantechIdentifierResolver {
     private final SantechIdentifierResolver delegate;
-    private final R2dbcEntityOperations operations;
     private final IdentifiedUriRepository urlRepository;
-    private final IdentifiedUriMapper identifiedUriMapper;
 
     @Override
-    public Mono<SantechIdentifier> resolveSantechIdentifier(URI uri) {
-        String rawUri = uri.toString();
-        return urlRepository.findFirstByUri(rawUri)
-                .switchIfEmpty(
-                        delegate.resolveSantechIdentifier(uri)
-                                .map(toIdentifiedUriWithUri(rawUri))
-                                .flatMap(operations::insert)
-                )
-                .map(identifiedUriMapper::identifiedUrlToSantechIdentifier);
-    }
-
-    private Function<SantechIdentifier, IdentifiedUri> toIdentifiedUriWithUri(String uri) {
-        return santechIdentifier -> {
-            IdentifiedUri identifiedUri = identifiedUriMapper.santechIdentifierToIdentifiedUrl(santechIdentifier);
-            identifiedUri.setUri(uri);
-            return identifiedUri;
-        };
+    public Optional<SantechIdentifier> resolveSantechIdentifier(URI uri) {
+        return urlRepository.findById(uri)
+                .map(IdentifiedUri::getSantechIdentifier)
+                .or(
+                        () -> delegate.resolveSantechIdentifier(uri)
+                                .map(santechIdentifier -> {
+                                    urlRepository.save(new IdentifiedUri(uri, santechIdentifier));
+                                    return santechIdentifier;
+                                })
+                );
     }
 }

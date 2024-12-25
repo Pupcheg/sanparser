@@ -1,7 +1,19 @@
 package me.supcheg.sanparser.association;
 
-import reactor.core.publisher.Flux;
+import me.supcheg.sanparser.id.SantechIdentifier;
+
+import java.util.List;
 
 public interface AssociationsResolver {
-    Flux<LazyAssociatedItem> associations();
+    default AssociatedItem resolveAssociations(SantechIdentifier root) {
+        return new AssociatedItem(
+                root,
+                analogues(root),
+                associations(root)
+        );
+    }
+
+    List<SantechIdentifier> analogues(SantechIdentifier root);
+
+    List<SantechIdentifier> associations(SantechIdentifier root);
 }

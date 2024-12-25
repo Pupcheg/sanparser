@@ -1,10 +1,10 @@
 package me.supcheg.sanparser.uri;
 
 import org.jsoup.nodes.Document;
-import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.util.Optional;
 
 public interface UriParser {
-    Mono<Document> parse(URI uri);
+    Optional<Document> parse(URI uri);
 }

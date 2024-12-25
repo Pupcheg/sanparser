@@ -1,4 +1,4 @@
 databaseChangeLog:
   - include:
-      file: scheme/1-identified-uri.sql
       relativeToChangelogFile: true
+      file: v1.0.0/db.changelog.yaml
