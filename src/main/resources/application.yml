@@ -17,3 +17,5 @@ santech:
   associations:
     analogues-uri: https://www.santech.ru/catalog/getVariantAnalogFull/
     associations-uri: https://www.santech.ru/catalog/getVariantAssoc/
+sanparser:
+  mode: categories

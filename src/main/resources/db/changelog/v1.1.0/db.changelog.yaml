@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1.1.0
+      author: supcheg
+      changes:
+        - sqlFile:
+            relativeToChangelogFile: true
+            path: 1-uri-properties.sql

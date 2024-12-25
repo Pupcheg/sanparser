@@ -2,3 +2,9 @@ databaseChangeLog:
   - include:
       relativeToChangelogFile: true
       file: v1.0.0/db.changelog.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: v1.1.0/db.changelog.yaml
+  - include:
+      relativeToChangelogFile: true
+      file: v1.1.1/db.changelog.yaml

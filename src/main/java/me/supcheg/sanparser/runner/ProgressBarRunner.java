@@ -1,33 +1,35 @@
-package me.supcheg.sanparser;
+package me.supcheg.sanparser.runner;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import me.supcheg.sanparser.association.AssociationsSource;
 import me.supcheg.sanparser.uri.SantechUriSource;
 import me.tongfei.progressbar.ConsoleProgressBarConsumer;
 import me.tongfei.progressbar.ProgressBar;
 import me.tongfei.progressbar.ProgressBarBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.stereotype.Component;
 
 import java.util.concurrent.Executor;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.pivovarit.collectors.ParallelCollectors.parallel;
 
-@Slf4j
 @RequiredArgsConstructor
-@Component
-public class SanParserApplicationRunner implements ApplicationRunner {
-    private final AssociationsSource associationsSource;
-    private final SantechUriSource uriSource;
-    private final Executor executor;
+public abstract class ProgressBarRunner implements ApplicationRunner {
+    @Autowired
+    private Executor executor;
+    @Autowired
+    private SantechUriSource uriSource;
+
+    private final String name;
+    private final Supplier<Stream<?>> streamSupplier;
 
     @Override
     public void run(ApplicationArguments args) {
         try (var bar = buildProgressBar()) {
-            associationsSource.associations()
+            streamSupplier.get()
                     .collect(parallel(i -> bar.step(), Collectors.counting(), executor, 6))
                     .thenRun(() -> System.exit(0))
                     .join();
@@ -36,7 +38,7 @@ public class SanParserApplicationRunner implements ApplicationRunner {
 
     private ProgressBar buildProgressBar() {
         return new ProgressBarBuilder()
-                .setTaskName("Associations")
+                .setTaskName(name)
                 .setInitialMax(uriSource.size())
                 .showSpeed()
                 .setConsumer(new ConsoleProgressBarConsumer(System.out))
