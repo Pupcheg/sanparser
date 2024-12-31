@@ -89,6 +89,8 @@ public abstract class StringConvertingType<T extends Serializable> implements En
 
     @Override
     public T assemble(Serializable cached, Object owner) {
-        return (T) cached;
+        @SuppressWarnings("unchecked")
+        T cast = (T) cached;
+        return cast;
     }
 }
