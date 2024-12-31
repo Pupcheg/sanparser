@@ -4,18 +4,17 @@ spring:
   application:
     name: sanparser
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: root
-    password: root
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:file:./sanparser
   jpa:
     properties:
       hibernate:
         default_schema: sanparser
+        dialect: me.supcheg.sanparser.data.EnhancedH2Dialect
 santech:
-  catalog-uri: file:/C:/Users/Supcheg/in/santech_catalog.xml
+  catalog-uri: https://www.santech.ru/data/custom_yandexmarket/462-bf6490b5.xml
   associations:
     analogues-uri: https://www.santech.ru/catalog/getVariantAnalogFull/
     associations-uri: https://www.santech.ru/catalog/getVariantAssoc/
 sanparser:
-  mode: categories
+  mode: properties
