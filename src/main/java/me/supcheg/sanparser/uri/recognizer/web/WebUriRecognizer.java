@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -29,10 +30,18 @@ public class WebUriRecognizer implements UriRecognizer {
                             .uri(uri)
                             .exchange((request, response) -> response.getBody(), false)
             );
-        } catch (ResourceAccessException e) {
-            return Optional.empty();
-        } catch (Exception e) {
-            throw new IOException(e);
+        } catch (ResourceAccessException ex) {
+            Throwable cause = ex.getCause();
+
+            if (cause == null) {
+                throw ex;
+            }
+
+            if (cause instanceof FileNotFoundException) {
+                return Optional.empty();
+            }
+
+            throw (IOException) cause; // ResourceAccessException always have IOException as cause
         }
     }
 }
