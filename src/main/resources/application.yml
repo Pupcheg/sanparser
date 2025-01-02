@@ -11,6 +11,9 @@ spring:
       hibernate:
         default_schema: sanparser
         dialect: me.supcheg.sanparser.data.EnhancedH2Dialect
+delay:
+  root: 10s
+  delta: 2s
 santech:
   catalog-uri: https://www.santech.ru/data/custom_yandexmarket/462-bf6490b5.xml
   associations:

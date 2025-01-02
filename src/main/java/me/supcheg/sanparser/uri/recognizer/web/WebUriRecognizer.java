@@ -1,5 +1,6 @@
-package me.supcheg.sanparser.uri.recognizer;
+package me.supcheg.sanparser.uri.recognizer.web;
 
+import me.supcheg.sanparser.uri.recognizer.UriRecognizer;
 import org.springframework.stereotype.Component;
 
 import java.io.FileNotFoundException;

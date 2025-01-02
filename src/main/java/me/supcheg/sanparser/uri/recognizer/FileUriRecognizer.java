@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
+@Recognizer
 @Component
 public class FileUriRecognizer implements UriRecognizer {
 
@@ -23,9 +24,5 @@ public class FileUriRecognizer implements UriRecognizer {
         return Files.notExists(path) ?
                 Optional.empty() :
                 Optional.of(Files.newInputStream(path));
-    }
-
-    public Object save(Object o) {
-        return o;
     }
 }
