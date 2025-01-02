@@ -69,7 +69,7 @@ public class ParsingAssociationsResolver implements AssociationsResolver {
                 .path("content")
                 .textValue();
 
-        return Jsoup.parse(content).getAllElements().stream()
+        return Jsoup.parse(content).stream()
                 .filter(element -> element.className().strip().equalsIgnoreCase("ss-slider__item"))
                 .map(element -> element.child(0).attr("href"))
                 .filter(not(String::isEmpty))

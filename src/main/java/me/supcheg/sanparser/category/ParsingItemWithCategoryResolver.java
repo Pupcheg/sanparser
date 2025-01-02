@@ -28,7 +28,7 @@ public class ParsingItemWithCategoryResolver implements ItemWithCategoryResolver
     }
 
     private Optional<String> resolveCategory(Document doc) {
-        return doc.getAllElements().stream()
+        return doc.stream()
                 .filter(element -> element.className().strip().equals("ss-breadcrumbs"))
                 .findFirst()
                 .map(element -> {

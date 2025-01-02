@@ -39,7 +39,7 @@ public class ParsingSantechIdentifierResolver implements SantechIdentifierResolv
     }
 
     private Optional<String> selectNumber(Document document) {
-        return document.getAllElements().stream()
+        return document.stream()
                 .filter(element -> element.ownText().strip().equals("Номенклатурный номер"))
                 .map(element -> {
                     Element sibling = element.nextElementSibling();
@@ -54,7 +54,7 @@ public class ParsingSantechIdentifierResolver implements SantechIdentifierResolv
     }
 
     private Optional<DefaultPostData> selectFullId(Document document) {
-        return document.getAllElements().stream()
+        return document.stream()
                 .filter(element -> element.className().strip().equalsIgnoreCase("ss-catalog-products-slider"))
                 .map(element -> element.attr("data-catalog-products-slider__options"))
                 .filter(not(String::isEmpty))

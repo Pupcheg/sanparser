@@ -36,7 +36,7 @@ public class ParsingItemWithPropertiesResolver implements ItemWithPropertiesReso
 
     private Map<String, String> resolveProperties(Document doc) {
         Map<String, String> properties = new HashMap<>();
-        doc.getAllElements().stream()
+        doc.stream()
                 .filter(element -> element.className().strip().equals("ss-product-property"))
                 .map(Element::children)
                 .flatMap(Collection::stream)
