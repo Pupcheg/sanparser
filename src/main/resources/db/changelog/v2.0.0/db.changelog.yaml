@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2.0.0
+      author: supcheg
+      changes:
+        - sqlFile:
+            relativeToChangelogFile: true
+            path: 1-attribute-cache.sql
+        - sqlFile:
+            relativeToChangelogFile: true
+            path: 2-drop-legacy.sql

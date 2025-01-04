@@ -7,7 +7,7 @@ import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.web.client.RestClient;
 
 @Configuration
-public class RestClientConfiguration {
+class RestClientConfiguration {
     @Bean
     RestClient webClient(
             @Value("${client.cookie}") String cookie

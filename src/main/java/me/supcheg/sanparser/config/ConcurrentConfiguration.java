@@ -7,7 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Configuration
-public class ConcurrentConfiguration {
+class ConcurrentConfiguration {
     @Bean
     ExecutorService executor() {
         return Executors.newFixedThreadPool(6);

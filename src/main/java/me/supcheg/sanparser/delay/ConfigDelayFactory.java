@@ -7,7 +7,7 @@ import java.time.Duration;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Component
-public class ConfigDelayFactory implements DelayFactory {
+class ConfigDelayFactory implements DelayFactory {
     @Value("${delay.root}")
     private Duration root;
     @Value("${delay.delta}")
