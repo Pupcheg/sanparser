@@ -50,6 +50,6 @@ class PropertiesAttribute extends CacheableSantechItemAttribute<Map<String, Stri
                     String value = valueElement.text().strip();
                     return Pair.of(key, value);
                 })
-                .collect(toMap(Pair::getFirst, Pair::getSecond));
+                .collect(toMap(Pair::getFirst, Pair::getSecond, (left, right) -> right));
     }
 }
