@@ -9,8 +9,10 @@ import org.springframework.stereotype.Component;
 import java.net.URI;
 
 @Component
-public class SantechItemRepositoryImpl implements SantechItemRepository {
-    private final Cache<URI, SantechItem> cache = CacheBuilder.newBuilder().build();
+class SantechItemRepositoryImpl implements SantechItemRepository {
+    private final Cache<URI, SantechItem> cache = CacheBuilder.newBuilder()
+            .weakValues()
+            .build();
 
     @SneakyThrows
     @Override

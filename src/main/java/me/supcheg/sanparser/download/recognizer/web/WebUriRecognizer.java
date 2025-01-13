@@ -1,7 +1,7 @@
-package me.supcheg.sanparser.uri.download.recognizer.web;
+package me.supcheg.sanparser.download.recognizer.web;
 
 import lombok.RequiredArgsConstructor;
-import me.supcheg.sanparser.uri.download.recognizer.UriRecognizer;
+import me.supcheg.sanparser.download.recognizer.UriRecognizer;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;

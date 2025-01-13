@@ -2,10 +2,10 @@ package me.supcheg.sanparser.santech.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import me.supcheg.sanparser.id.SantechIdentifier;
+import me.supcheg.sanparser.document.DocumentParser;
+import me.supcheg.sanparser.santech.SantechIdentifier;
 import me.supcheg.sanparser.santech.attribute.SantechItemAttribute;
 import me.supcheg.sanparser.santech.repository.SantechItemRepository;
-import org.jsoup.Jsoup;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient.RequestHeadersSpec.ConvertibleClientHttpResponse;
@@ -19,10 +19,11 @@ import static java.util.function.Predicate.not;
 
 @RequiredArgsConstructor
 @Component
-public class DefaultSantechIdentiferListExchangeFunction implements SantechIdentiferListExchangeFunction {
+class DefaultSantechIdentiferListExchangeFunction implements SantechIdentiferListExchangeFunction {
     private final SantechItemAttribute<SantechIdentifier> identifier;
     private final ObjectMapper objectMapper;
     private final SantechItemRepository itemRepository;
+    private final DocumentParser documentParser;
 
     @Override
     public List<SantechIdentifier> exchange(HttpRequest request,
@@ -31,7 +32,8 @@ public class DefaultSantechIdentiferListExchangeFunction implements SantechIdent
                 .path("content")
                 .textValue();
 
-        return Jsoup.parse(content).stream()
+        return documentParser.parse(content)
+                .stream()
                 .filter(element -> element.className().strip().equalsIgnoreCase("ss-slider__item"))
                 .map(element -> element.child(0).attr("href"))
                 .filter(not(String::isEmpty))

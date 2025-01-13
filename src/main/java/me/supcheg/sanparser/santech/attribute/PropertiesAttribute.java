@@ -2,7 +2,7 @@ package me.supcheg.sanparser.santech.attribute;
 
 import lombok.RequiredArgsConstructor;
 import me.supcheg.sanparser.santech.SantechItem;
-import me.supcheg.sanparser.santech.attribute.cache.CacheableSantechItemAttribute;
+import me.supcheg.sanparser.santech.attribute.cache.CacheableSantechItemAttributeImpl;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.data.util.Pair;
@@ -17,7 +17,7 @@ import static java.util.stream.Collectors.toMap;
 
 @RequiredArgsConstructor
 @Component
-class PropertiesAttribute extends CacheableSantechItemAttribute<Map<String, String>> {
+class PropertiesAttribute extends CacheableSantechItemAttributeImpl<Map<String, String>> {
     private final SantechItemAttribute<Document> document;
 
     @Override

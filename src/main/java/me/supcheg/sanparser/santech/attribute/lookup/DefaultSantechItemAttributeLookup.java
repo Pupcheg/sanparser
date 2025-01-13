@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.supcheg.sanparser.santech.attribute.SantechItemAttribute;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,12 +14,14 @@ public class DefaultSantechItemAttributeLookup implements SantechItemAttributeLo
     private final List<SantechItemAttribute<?>> attributes;
 
     @Override
-    public <T> Optional<SantechItemAttribute<T>> find(String key) {
-        for (SantechItemAttribute<?> attribute : attributes) {
-            if (attribute.key().equalsIgnoreCase(key)) {
-                return Optional.of((SantechItemAttribute<T>) attribute);
-            }
-        }
-        return Optional.empty();
+    public Optional<SantechItemAttribute<?>> find(String key) {
+        return attributes.stream()
+                .filter(attribute -> key.equalsIgnoreCase(attribute.key()))
+                .findFirst();
+    }
+
+    @Override
+    public List<SantechItemAttribute<?>> all() {
+        return Collections.unmodifiableList(attributes);
     }
 }

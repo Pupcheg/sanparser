@@ -1,19 +1,17 @@
 package me.supcheg.sanparser.santech.attribute;
 
 import lombok.RequiredArgsConstructor;
+import me.supcheg.sanparser.document.DocumentReference;
 import me.supcheg.sanparser.santech.SantechItem;
-import me.supcheg.sanparser.uri.parse.UriParser;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
 
-import java.net.URI;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
 class DocumentAttribute implements SantechItemAttribute<Document> {
-    private final SantechItemAttribute<URI> uri;
-    private final UriParser uriParser;
+    private final SantechItemAttribute<DocumentReference> documentReference;
 
     @Override
     public String key() {
@@ -22,7 +20,7 @@ class DocumentAttribute implements SantechItemAttribute<Document> {
 
     @Override
     public Optional<Document> find(SantechItem item) {
-       return item.attribute(uri)
-                .flatMap(uriParser::parse);
+        return item.attribute(documentReference)
+                .map(DocumentReference::document);
     }
 }

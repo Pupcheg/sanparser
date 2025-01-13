@@ -1,10 +1,10 @@
-package me.supcheg.sanparser.uri.download.recognizer.web;
+package me.supcheg.sanparser.download.recognizer.web;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import me.supcheg.sanparser.delay.DelayFactory;
-import me.supcheg.sanparser.uri.download.recognizer.Recognizer;
-import me.supcheg.sanparser.uri.download.recognizer.UriRecognizer;
+import me.supcheg.sanparser.download.recognizer.Recognizer;
+import me.supcheg.sanparser.download.recognizer.UriRecognizer;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;

@@ -16,10 +16,13 @@ delay:
   delta: 2s
 client:
   cookie: '__ddg1_=fs6FmFmJf28wrVktDVqs; __ddgid_=iJV9moRvtZeMuqRK; __ddgmark_=kQv7zW9SSlSzVf84; __ddg5_=gBPfVAnION8RnfhY; __ddg2_=rUXAFqSfAX5XU2Ql; __ddg9_=212.35.168.113; __ddg8_=R6xYYGQOrwHJDA6x; __ddg10_=1735830147'
+local_identifier:
+  path: ./local_ids.txt
+  split_pattern: \t
+variants:
+  out_path: ./variants.csv
 santech:
   catalog-uri: https://www.santech.ru/data/custom_yandexmarket/462-bf6490b5.xml
   associations:
     analogues-uri: https://www.santech.ru/catalog/getVariantAnalogFull/
     associations-uri: https://www.santech.ru/catalog/getVariantAssoc/
-sanparser:
-  mode: properties

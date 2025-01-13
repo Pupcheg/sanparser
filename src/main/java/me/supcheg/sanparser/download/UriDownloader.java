@@ -1,4 +1,4 @@
-package me.supcheg.sanparser.uri.download;
+package me.supcheg.sanparser.download;
 
 import java.io.InputStream;
 import java.net.URI;

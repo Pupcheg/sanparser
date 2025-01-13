@@ -3,9 +3,10 @@ package me.supcheg.sanparser.santech.attribute;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import me.supcheg.sanparser.id.SantechIdentifier;
+import lombok.extern.slf4j.Slf4j;
+import me.supcheg.sanparser.santech.SantechIdentifier;
 import me.supcheg.sanparser.santech.SantechItem;
-import me.supcheg.sanparser.santech.attribute.cache.CacheableSantechItemAttribute;
+import me.supcheg.sanparser.santech.attribute.cache.CacheableSantechItemAttributeImpl;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
@@ -15,9 +16,10 @@ import java.util.Optional;
 
 import static java.util.function.Predicate.not;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
-class SantechIdentifierAttribute extends CacheableSantechItemAttribute<SantechIdentifier> {
+class SantechIdentifierAttribute extends CacheableSantechItemAttributeImpl<SantechIdentifier> {
     private final SantechItemAttribute<Document> document;
     private final ObjectMapper objectMapper;
 

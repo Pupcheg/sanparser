@@ -1,4 +1,4 @@
-package me.supcheg.sanparser.uri.download;
+package me.supcheg.sanparser.download;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

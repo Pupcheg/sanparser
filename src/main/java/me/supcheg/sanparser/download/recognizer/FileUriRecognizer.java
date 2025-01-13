@@ -1,4 +1,4 @@
-package me.supcheg.sanparser.uri.download.recognizer;
+package me.supcheg.sanparser.download.recognizer;
 
 import org.springframework.stereotype.Component;
 

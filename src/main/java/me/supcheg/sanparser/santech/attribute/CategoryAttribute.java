@@ -2,7 +2,7 @@ package me.supcheg.sanparser.santech.attribute;
 
 import lombok.RequiredArgsConstructor;
 import me.supcheg.sanparser.santech.SantechItem;
-import me.supcheg.sanparser.santech.attribute.cache.CacheableSantechItemAttribute;
+import me.supcheg.sanparser.santech.attribute.cache.CacheableSantechItemAttributeImpl;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
-class CategoryAttribute extends CacheableSantechItemAttribute<String> {
+class CategoryAttribute extends CacheableSantechItemAttributeImpl<String> {
     private final SantechItemAttribute<Document> document;
 
     @Override

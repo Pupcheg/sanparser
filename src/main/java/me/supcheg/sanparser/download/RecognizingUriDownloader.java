@@ -1,12 +1,11 @@
-package me.supcheg.sanparser.uri.download;
+package me.supcheg.sanparser.download;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import me.supcheg.sanparser.uri.download.recognizer.Recognizer;
-import me.supcheg.sanparser.uri.download.recognizer.UriRecognizer;
+import me.supcheg.sanparser.download.recognizer.Recognizer;
+import me.supcheg.sanparser.download.recognizer.UriRecognizer;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
@@ -21,10 +20,6 @@ class RecognizingUriDownloader implements UriDownloader {
     @SneakyThrows
     @Override
     public Optional<InputStream> download(URI uri) {
-        return recognizeInputStream(uri);
-    }
-
-    private Optional<InputStream> recognizeInputStream(URI uri) throws IOException {
         for (UriRecognizer recognizer : recognizers) {
             if (recognizer.canRecognize(uri)) {
                 return recognizer.recognize(uri);

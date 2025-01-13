@@ -11,13 +11,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
+import static me.supcheg.sanparser.unchecked.GenericTypeResolver.obtainType;
+
 public abstract class StringConvertingType<T extends Serializable> implements EnhancedUserType<T> {
     private final Class<T> type;
 
-    @SuppressWarnings("unchecked")
     @SafeVarargs
-    protected StringConvertingType(T... typeAccessor) {
-        this((Class<T>) typeAccessor.getClass().componentType());
+    protected StringConvertingType(T... typeArray) {
+        this(obtainType(typeArray));
     }
 
     protected StringConvertingType(Class<T> type) {
