@@ -1,8 +1,9 @@
 package me.supcheg.sanparser.santech.attribute;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.RequiredArgsConstructor;
 import me.supcheg.sanparser.santech.SantechItem;
-import me.supcheg.sanparser.santech.attribute.cache.CacheableSantechItemAttributeImpl;
+import me.supcheg.sanparser.santech.attribute.cacheable.CacheableSantechItemAttributeImpl;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.data.util.Pair;
@@ -23,6 +24,11 @@ class PropertiesAttribute extends CacheableSantechItemAttributeImpl<Map<String, 
     @Override
     public String key() {
         return "properties";
+    }
+
+    @Override
+    public TypeReference<Map<String, String>> type() {
+        return new TypeReference<>() {};
     }
 
     @Override

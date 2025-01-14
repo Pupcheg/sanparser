@@ -17,6 +17,7 @@ import org.apache.commons.csv.CSVPrinter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -31,7 +32,11 @@ import java.util.stream.Stream;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class VariantsCsvRunner implements ApplicationRunner {
+@ConditionalOnProperty(
+        name = "mode",
+        havingValue = "variants"
+)
+class VariantsCsvRunner implements ApplicationRunner {
     private final SantechItemSource source;
     private final SantechItemAttribute<SantechIdentifier> santechIdentifier;
     private final SantechItemAttribute<List<SantechIdentifier>> analoguesAttribute;
@@ -45,7 +50,7 @@ public class VariantsCsvRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
         String[] headers = Stream.concat(
                 Stream.of("local_identifier"),
-                IntStream.rangeClosed(1, 100)
+                IntStream.rangeClosed(1, findMaxVariantsCount())
                         .mapToObj(index -> "association-" + index)
         ).toArray(String[]::new);
 
@@ -73,6 +78,19 @@ public class VariantsCsvRunner implements ApplicationRunner {
                     });
             log.info("Done");
         }
+        log.info("Saved {} at {}", outPath.getFileName(), outPath.toAbsolutePath());
+    }
+
+    private int findMaxVariantsCount() {
+        return source.items()
+                .mapToInt(this::allVariantsCount)
+                .max()
+                .orElse(0);
+    }
+
+    private int allVariantsCount(SantechItem item) {
+        return item.attribute(analoguesAttribute).map(List::size).orElse(0)
+               + item.attribute(associationsAttribute).map(List::size).orElse(0);
     }
 
     private Optional<List<String>> constructRecord(SantechItem item) {

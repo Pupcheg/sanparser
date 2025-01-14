@@ -3,7 +3,7 @@ package me.supcheg.sanparser.runner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.supcheg.sanparser.santech.attribute.SantechItemAttribute;
-import me.supcheg.sanparser.santech.attribute.cache.CacheableSantechItemAttribute;
+import me.supcheg.sanparser.santech.attribute.cacheable.CacheableSantechItemAttribute;
 import me.supcheg.sanparser.santech.attribute.lookup.SantechItemAttributeLookup;
 import me.supcheg.sanparser.santech.source.SantechItemSource;
 import me.tongfei.progressbar.ConsoleProgressBarConsumer;
@@ -12,6 +12,8 @@ import me.tongfei.progressbar.ProgressBarBuilder;
 import me.tongfei.progressbar.ProgressBarStyle;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +26,12 @@ import static java.util.stream.Collectors.joining;
 
 @Slf4j
 @RequiredArgsConstructor
-//@Component
-class AttributeRunner implements ApplicationRunner {
+@Component
+@ConditionalOnProperty(
+        name = "mode",
+        havingValue = "attributes"
+)
+class AttributesRunner implements ApplicationRunner {
     private final Executor executor;
     private final SantechItemSource source;
     private final SantechItemAttributeLookup lookup;

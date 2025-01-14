@@ -17,6 +17,8 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static com.google.common.collect.Iterables.getFirst;
+import static com.google.common.collect.Iterables.getLast;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toMap;
 
@@ -55,9 +57,10 @@ class TextFileLocalIdentifierLookup implements LocalIdentifierLookup {
         }
         if (!nomenclatureNumber2localIdentifier.isEmpty()) {
             log.info(
-                    "Found {} identifiers (first: {})",
+                    "Found {} identifiers (first: {}, last: {})",
                     nomenclatureNumber2localIdentifier.size(),
-                    nomenclatureNumber2localIdentifier.entrySet().iterator().next()
+                    getFirst(nomenclatureNumber2localIdentifier.entrySet(), "<null>"),
+                    getLast(nomenclatureNumber2localIdentifier.entrySet(), "<null>")
             );
             this.nomenclatureNumber2localIdentifier.putAll(nomenclatureNumber2localIdentifier);
         }

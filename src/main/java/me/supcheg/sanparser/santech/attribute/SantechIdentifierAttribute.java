@@ -1,12 +1,13 @@
 package me.supcheg.sanparser.santech.attribute;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import me.supcheg.sanparser.santech.SantechIdentifier;
 import me.supcheg.sanparser.santech.SantechItem;
-import me.supcheg.sanparser.santech.attribute.cache.CacheableSantechItemAttributeImpl;
+import me.supcheg.sanparser.santech.attribute.cacheable.CacheableSantechItemAttributeImpl;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,11 @@ class SantechIdentifierAttribute extends CacheableSantechItemAttributeImpl<Sante
     @Override
     public String key() {
         return "santech_identifier";
+    }
+
+    @Override
+    public TypeReference<SantechIdentifier> type() {
+        return new TypeReference<>() {};
     }
 
     @Override

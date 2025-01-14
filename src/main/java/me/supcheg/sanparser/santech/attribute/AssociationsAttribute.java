@@ -2,10 +2,9 @@ package me.supcheg.sanparser.santech.attribute;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import me.supcheg.sanparser.santech.SantechIdentifier;
 import me.supcheg.sanparser.santech.SantechItem;
-import me.supcheg.sanparser.santech.attribute.cache.CacheableSantechItemAttributeImpl;
+import me.supcheg.sanparser.santech.attribute.cacheable.CacheableSantechItemAttributeImpl;
 import me.supcheg.sanparser.santech.client.SantechIdentiferListExchangeFunction;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -35,6 +34,11 @@ class AssociationsAttribute extends CacheableSantechItemAttributeImpl<List<Sante
     }
 
     @Override
+    public TypeReference<List<SantechIdentifier>> type() {
+        return new TypeReference<>() {};
+    }
+
+    @Override
     public Optional<List<SantechIdentifier>> findIternal(SantechItem attributed) {
         return attributed.attribute(identifier)
                 .map(this::associations);
@@ -52,11 +56,5 @@ class AssociationsAttribute extends CacheableSantechItemAttributeImpl<List<Sante
                         )
                 ))
                 .exchange(santechIdentiferListExchangeFunction);
-    }
-
-    @SneakyThrows
-    @Override
-    protected List<SantechIdentifier> convertFromString(String raw) {
-        return objectMapper.readValue(raw, new TypeReference<>() {});
     }
 }
