@@ -11,23 +11,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Objects;
 
-import static me.supcheg.sanparser.unchecked.GenericTypeResolver.obtainType;
-
-public abstract class StringConvertingType<T extends Serializable> implements EnhancedUserType<T> {
-    private final Class<T> type;
-
-    @SafeVarargs
-    protected StringConvertingType(T... typeArray) {
-        this(obtainType(typeArray));
-    }
-
-    protected StringConvertingType(Class<T> type) {
-        this.type = type;
-    }
-
+abstract class StringConvertingImmutableType<T extends Serializable> implements EnhancedUserType<T> {
     @Override
     public String toSqlLiteral(T value) {
-        return toString(value);
+        return String.valueOf(value);
     }
 
     @Override
@@ -36,16 +23,8 @@ public abstract class StringConvertingType<T extends Serializable> implements En
     }
 
     @Override
-    public abstract T fromStringValue(CharSequence sequence);
-
-    @Override
     public int getSqlType() {
         return SqlTypes.VARCHAR;
-    }
-
-    @Override
-    public Class<T> returnedClass() {
-        return type;
     }
 
     @Override
@@ -67,10 +46,11 @@ public abstract class StringConvertingType<T extends Serializable> implements En
     @Override
     public void nullSafeSet(PreparedStatement st, T value, int index, SharedSessionContractImplementor session) throws SQLException {
         if (value == null) {
-            st.setNull(index, SqlTypes.VARCHAR);
-        } else {
-            st.setString(index, toString(value));
+            st.setNull(index, getSqlType());
+            return;
         }
+
+        st.setString(index, toString(value));
     }
 
     @Override
@@ -79,7 +59,7 @@ public abstract class StringConvertingType<T extends Serializable> implements En
     }
 
     @Override
-    public boolean isMutable() {
+    public final boolean isMutable() {
         return false;
     }
 

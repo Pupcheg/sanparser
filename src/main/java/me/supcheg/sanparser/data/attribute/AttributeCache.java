@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.supcheg.sanparser.data.type.UriType;
-import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.net.URI;
@@ -23,7 +21,6 @@ public class AttributeCache {
     @UuidGenerator
     private UUID id;
 
-    @Type(UriType.class)
     private URI uri;
 
     private String attributeKey;

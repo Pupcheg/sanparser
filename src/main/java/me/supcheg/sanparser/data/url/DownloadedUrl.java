@@ -5,8 +5,6 @@ import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import me.supcheg.sanparser.data.type.UriType;
-import org.hibernate.annotations.Type;
 
 import java.net.URI;
 
@@ -16,7 +14,6 @@ import java.net.URI;
 @AllArgsConstructor
 public class DownloadedUrl {
     @Id
-    @Type(UriType.class)
     private URI url;
 
     private byte[] data;
