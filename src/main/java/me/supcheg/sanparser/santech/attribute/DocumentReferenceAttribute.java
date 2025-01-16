@@ -4,21 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import me.supcheg.sanparser.document.DocumentParser;
 import me.supcheg.sanparser.document.DocumentReference;
-import me.supcheg.sanparser.santech.SantechItem;
 import me.supcheg.sanparser.download.UriDownloader;
+import me.supcheg.sanparser.santech.SantechItem;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.net.URI;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 @RequiredArgsConstructor
 @Component
 class DocumentReferenceAttribute implements SantechItemAttribute<DocumentReference> {
-    private final SantechItemAttribute<URI> uri;
     private final UriDownloader uriDownloader;
     private final DocumentParser documentParser;
 
@@ -39,7 +37,7 @@ class DocumentReferenceAttribute implements SantechItemAttribute<DocumentReferen
     }
 
     private Optional<Document> parseDocument(SantechItem item) {
-        return item.attribute(uri)
+        return Optional.of(item.uri())
                 .flatMap(uriDownloader::download)
                 .map(documentParser::parse);
     }

@@ -19,4 +19,9 @@ class SantechItemRepositoryImpl implements SantechItemRepository {
     public SantechItem item(URI uri) {
         return cache.get(uri, () -> new SantechItemImpl(uri));
     }
+
+    private record SantechItemImpl(
+            URI uri
+    ) implements SantechItem {
+    }
 }

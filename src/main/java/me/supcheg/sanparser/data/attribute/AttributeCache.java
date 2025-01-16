@@ -1,5 +1,6 @@
 package me.supcheg.sanparser.data.attribute;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
@@ -21,8 +22,10 @@ public class AttributeCache {
     @UuidGenerator
     private UUID id;
 
+    @Column(nullable = false)
     private URI uri;
 
+    @Column(nullable = false)
     private String attributeKey;
 
     private String jsonValue;

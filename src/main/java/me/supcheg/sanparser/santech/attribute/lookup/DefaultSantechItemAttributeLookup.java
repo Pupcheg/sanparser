@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
-public class DefaultSantechItemAttributeLookup implements SantechItemAttributeLookup {
+class DefaultSantechItemAttributeLookup implements SantechItemAttributeLookup {
     private final List<SantechItemAttribute<?>> attributes;
 
     @Override

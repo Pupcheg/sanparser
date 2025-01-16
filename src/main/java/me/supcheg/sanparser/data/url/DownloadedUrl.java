@@ -1,5 +1,6 @@
 package me.supcheg.sanparser.data.url;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
@@ -21,5 +22,6 @@ public class DownloadedUrl {
     private URI url;
 
     @Lob
+    @Column(nullable = false)
     private Blob data;
 }

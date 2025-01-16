@@ -42,7 +42,7 @@ class WebUriRecognizer implements UriRecognizer {
                 return Optional.empty();
             }
 
-            throw sneakyThrow(cause); // lombok annotation processor will wrap this call and no runtime dependency provided
+            throw sneakyThrow(cause); // lombok annotation processor will wrap this call and no runtime dependency will be provided
         }
     }
 }
