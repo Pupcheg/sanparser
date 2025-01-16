@@ -5,12 +5,14 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import me.supcheg.sanparser.data.url.DownloadedUrl;
 import me.supcheg.sanparser.data.url.DownloadedUrlRepository;
+import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.net.URI;
+import java.sql.Blob;
 import java.util.Optional;
 
 @Slf4j
@@ -24,24 +26,31 @@ class DbUriDownloader implements UriDownloader {
     @SneakyThrows
     @Override
     public Optional<InputStream> download(URI uri) {
-        DownloadedUrl downloadedUrl = downloadedUrlRepository.findById(uri).orElse(null);
+        Optional<DownloadedUrl> downloadedUrl = downloadedUrlRepository.findById(uri);
 
-        if (downloadedUrl != null) {
-            return optionalInputStream(downloadedUrl.getData());
+        if (downloadedUrl.isPresent()) {
+            return downloadedUrl
+                    .map(DownloadedUrl::getData)
+                    .map(Blob::getBinaryStream);
         }
 
-        byte[] bytes;
-        try (InputStream in = delegate.download(uri).orElse(null)) {
-            bytes = in == null ? null : in.readAllBytes();
-        }
+        Optional<byte[]> bytes = delegate.download(uri)
+                .map(this::downloadInputStream);
 
-        downloadedUrlRepository.save(new DownloadedUrl(uri, bytes));
+        downloadedUrlRepository.save(new DownloadedUrl(
+                uri,
+                bytes.map(BlobProxy::generateProxy)
+                        .orElse(null)
+        ));
 
-        return optionalInputStream(bytes);
+        return bytes
+                .map(ByteArrayInputStream::new);
     }
 
-    private Optional<InputStream> optionalInputStream(byte[] bytes) {
-        return Optional.ofNullable(bytes)
-                .map(ByteArrayInputStream::new);
+    @SneakyThrows
+    private byte[] downloadInputStream(InputStream in) {
+        try (in) {
+            return in.readAllBytes();
+        }
     }
 }
