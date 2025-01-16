@@ -61,10 +61,13 @@ class DatabaseSantechItemAttributeCache implements ProvidingSantechItemAttribute
         item.attribute(uri)
                 .ifPresent(uri ->
                         attributeRepository.save(
-                                me.supcheg.sanparser.data.attribute.AttributeCache.builder()
+                                AttributeCache.builder()
                                         .uri(uri)
                                         .attributeKey(attribute.key())
-                                        .jsonValue(value.map(this::convertToString).orElse(null))
+                                        .jsonValue(
+                                                value.map(this::convertToString)
+                                                        .orElse(null)
+                                        )
                                         .build()
                         )
                 );

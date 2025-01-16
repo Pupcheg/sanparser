@@ -37,11 +37,15 @@ class DbUriDownloader implements UriDownloader {
         Optional<byte[]> bytes = delegate.download(uri)
                 .map(this::downloadInputStream);
 
-        downloadedUrlRepository.save(new DownloadedUrl(
-                uri,
-                bytes.map(BlobProxy::generateProxy)
-                        .orElse(null)
-        ));
+        downloadedUrlRepository.save(
+                DownloadedUrl.builder()
+                        .url(uri)
+                        .data(
+                                bytes.map(BlobProxy::generateProxy)
+                                        .orElse(null)
+                        )
+                        .build()
+        );
 
         return bytes
                 .map(ByteArrayInputStream::new);
