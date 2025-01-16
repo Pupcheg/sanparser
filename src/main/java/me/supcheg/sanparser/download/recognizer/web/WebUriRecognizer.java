@@ -7,10 +7,11 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Optional;
+
+import static lombok.Lombok.sneakyThrow;
 
 @RequiredArgsConstructor
 @Component
@@ -23,7 +24,7 @@ class WebUriRecognizer implements UriRecognizer {
     }
 
     @Override
-    public Optional<InputStream> recognize(URI uri) throws IOException {
+    public Optional<InputStream> recognize(URI uri) {
         try {
             return Optional.ofNullable(
                     client.get()
@@ -41,7 +42,7 @@ class WebUriRecognizer implements UriRecognizer {
                 return Optional.empty();
             }
 
-            throw (IOException) cause; // ResourceAccessException always have IOException as cause
+            throw sneakyThrow(cause); // lombok annotation processor will wrap this call and no runtime dependency provided
         }
     }
 }

@@ -15,6 +15,8 @@ import java.net.URI;
 import java.sql.Blob;
 import java.util.Optional;
 
+import static com.pivovarit.function.ThrowingFunction.sneaky;
+
 @Slf4j
 @RequiredArgsConstructor
 @Component
@@ -23,7 +25,6 @@ class DbUriDownloader implements UriDownloader {
     private final UriDownloader delegate;
     private final DownloadedUrlRepository downloadedUrlRepository;
 
-    @SneakyThrows
     @Override
     public Optional<InputStream> download(URI uri) {
         Optional<DownloadedUrl> downloadedUrl = downloadedUrlRepository.findById(uri);
@@ -31,7 +32,7 @@ class DbUriDownloader implements UriDownloader {
         if (downloadedUrl.isPresent()) {
             return downloadedUrl
                     .map(DownloadedUrl::getData)
-                    .map(Blob::getBinaryStream);
+                    .map(sneaky(Blob::getBinaryStream));
         }
 
         Optional<byte[]> bytes = delegate.download(uri)

@@ -7,7 +7,6 @@ import me.supcheg.sanparser.download.recognizer.Recognizer;
 import me.supcheg.sanparser.download.recognizer.UriRecognizer;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Optional;
@@ -25,12 +24,12 @@ class DelayedWebUriRecognizer implements UriRecognizer {
     }
 
     @Override
-    public Optional<InputStream> recognize(URI uri) throws IOException {
+    public Optional<InputStream> recognize(URI uri) {
         waitDelay();
         return delegate.recognize(uri);
     }
 
-    @SneakyThrows(InterruptedException.class)
+    @SneakyThrows
     private void waitDelay() {
         Thread.sleep(delayFactory.randomDelay());
     }
