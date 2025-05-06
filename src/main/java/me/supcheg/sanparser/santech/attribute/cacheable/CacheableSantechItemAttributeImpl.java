@@ -1,6 +1,5 @@
 package me.supcheg.sanparser.santech.attribute.cacheable;
 
-import lombok.extern.slf4j.Slf4j;
 import me.supcheg.sanparser.santech.SantechItem;
 import me.supcheg.sanparser.santech.cache.AttributeCacheEntry;
 import me.supcheg.sanparser.santech.cache.SantechItemAttributeCache;
@@ -9,7 +8,6 @@ import org.springframework.context.annotation.Lazy;
 
 import java.util.Optional;
 
-@Slf4j
 public abstract class CacheableSantechItemAttributeImpl<T> implements CacheableSantechItemAttribute<T> {
     @Lazy
     @Autowired

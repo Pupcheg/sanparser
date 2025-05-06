@@ -34,6 +34,7 @@ class SequenceSantechItemAttributeCache implements SantechItemAttributeCache {
     public <T> Optional<AttributeCacheEntry<T>> findEntry(SantechItem item, CacheableSantechItemAttribute<T> attribute) {
         return delegates.stream()
                 .map(delegate -> delegate.findEntry(item, attribute))
+                .filter(Optional::isPresent)
                 .findFirst()
                 .orElseGet(Optional::empty);
     }

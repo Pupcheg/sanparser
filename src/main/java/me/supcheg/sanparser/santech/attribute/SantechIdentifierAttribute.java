@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import me.supcheg.sanparser.santech.SantechIdentifier;
 import me.supcheg.sanparser.santech.SantechItem;
 import me.supcheg.sanparser.santech.attribute.cacheable.CacheableSantechItemAttributeImpl;
@@ -17,7 +16,6 @@ import java.util.Optional;
 
 import static java.util.function.Predicate.not;
 
-@Slf4j
 @RequiredArgsConstructor
 @Component
 class SantechIdentifierAttribute extends CacheableSantechItemAttributeImpl<SantechIdentifier> {

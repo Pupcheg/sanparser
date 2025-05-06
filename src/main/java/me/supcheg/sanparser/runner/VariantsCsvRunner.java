@@ -20,14 +20,14 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import static com.pivovarit.function.ThrowingConsumer.sneaky;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -68,14 +68,10 @@ class VariantsCsvRunner implements ApplicationRunner {
             source.items()
                     .map(this::constructRecord)
                     .<List<String>>mapMulti(Optional::ifPresent)
-                    .forEach(record -> {
-                        try {
-                            printer.printRecord(record);
-                        } catch (IOException e) {
-                            throw new UncheckedIOException(e);
-                        }
+                    .forEach(sneaky(record -> {
+                        printer.printRecord(record);
                         bar.step();
-                    });
+                    }));
             log.info("Done");
         }
         log.info("Saved {} at {}", outPath.getFileName(), outPath.toAbsolutePath());

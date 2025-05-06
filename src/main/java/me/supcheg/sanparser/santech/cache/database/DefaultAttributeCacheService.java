@@ -1,5 +1,6 @@
 package me.supcheg.sanparser.santech.cache.database;
 
+import com.google.common.collect.Streams;
 import lombok.RequiredArgsConstructor;
 import me.supcheg.sanparser.data.attribute.AttributeRepository;
 import me.supcheg.sanparser.santech.SantechItem;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
 @Component
@@ -31,7 +31,7 @@ class DefaultAttributeCacheService implements AttributeCacheService {
 
     @Override
     public Stream<AttributeCacheEntry<?>> findAllEntries() {
-        return StreamSupport.stream(attributeCacheRepository.findAll().spliterator(), false)
+        return Streams.stream(attributeCacheRepository.findAll())
                 .map(attributeCacheConverter::convert);
     }
 }
