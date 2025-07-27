@@ -9,7 +9,12 @@ import java.util.concurrent.Executors;
 @Configuration
 class ConcurrentConfiguration {
     @Bean
-    ExecutorService executor() {
-        return Executors.newFixedThreadPool(6);
+    ExecutorService executor(int parallelism) {
+        return Executors.newFixedThreadPool(parallelism);
+    }
+
+    @Bean
+    int parallelism() {
+        return Runtime.getRuntime().availableProcessors();
     }
 }

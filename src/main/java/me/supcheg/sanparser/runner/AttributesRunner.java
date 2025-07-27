@@ -33,6 +33,7 @@ import static java.util.stream.Collectors.joining;
 )
 class AttributesRunner implements ApplicationRunner {
     private final Executor executor;
+    private final int parallelism;
     private final SantechItemSource source;
     private final SantechItemAttributeLookup lookup;
 
@@ -55,7 +56,7 @@ class AttributesRunner implements ApplicationRunner {
         try (var bar = buildProgressBar()) {
             source.items()
                     .peek(item -> attributes.forEach(item::attribute))
-                    .collect(parallel(i -> bar.step(), counting(), executor, 6))
+                    .collect(parallel(i -> bar.step(), counting(), executor, parallelism))
                     .thenRun(() -> {
                         log.info("Done");
                         System.exit(0);
