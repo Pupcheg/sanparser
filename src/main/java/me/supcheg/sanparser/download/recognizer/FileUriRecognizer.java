@@ -10,7 +10,6 @@ import java.util.Optional;
 
 import static com.pivovarit.function.ThrowingFunction.sneaky;
 
-@Recognizer
 @Component
 class FileUriRecognizer implements UriRecognizer {
 

@@ -1,21 +1,16 @@
-package me.supcheg.sanparser.download.recognizer.web;
+package me.supcheg.sanparser.download.recognizer;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import me.supcheg.sanparser.delay.DelayFactory;
-import me.supcheg.sanparser.download.recognizer.Recognizer;
-import me.supcheg.sanparser.download.recognizer.UriRecognizer;
-import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Optional;
 
-@Recognizer
 @RequiredArgsConstructor
-@Component
-class DelayedWebUriRecognizer implements UriRecognizer {
-    private final WebUriRecognizer delegate;
+public class DelayedUriRecognizer implements UriRecognizer {
+    private final UriRecognizer delegate;
     private final DelayFactory delayFactory;
 
     @Override

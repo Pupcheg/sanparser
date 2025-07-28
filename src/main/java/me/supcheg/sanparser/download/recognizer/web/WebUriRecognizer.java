@@ -2,7 +2,6 @@ package me.supcheg.sanparser.download.recognizer.web;
 
 import lombok.RequiredArgsConstructor;
 import me.supcheg.sanparser.download.recognizer.UriRecognizer;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 
@@ -14,7 +13,6 @@ import java.util.Optional;
 import static lombok.Lombok.sneakyThrow;
 
 @RequiredArgsConstructor
-@Component
 class WebUriRecognizer implements UriRecognizer {
     private final RestClient client;
 
