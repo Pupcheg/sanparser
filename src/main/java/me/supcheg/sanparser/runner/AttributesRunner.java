@@ -4,11 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import me.supcheg.sanparser.book.AttributeBookWriter;
+import me.supcheg.sanparser.progress.ProgressBarFactory;
 import me.supcheg.sanparser.santech.SantechIdentifier;
 import me.supcheg.sanparser.santech.SantechItem;
 import me.supcheg.sanparser.santech.attribute.SantechItemAttribute;
+import me.supcheg.sanparser.santech.attribute.warmup.SantechItemAttributeWarmup;
 import me.supcheg.sanparser.santech.source.SantechItemSource;
-import me.tongfei.progressbar.ProgressBar;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -20,10 +21,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Executor;
 
-import static com.pivovarit.collectors.ParallelCollectors.parallel;
-import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.flatMapping;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toUnmodifiableSet;
@@ -34,17 +32,16 @@ import static java.util.stream.Collectors.toUnmodifiableSet;
 @ConditionalOnExpression("#{springApplicationArguments.containsOption('mode') && springApplicationArguments.getOptionValues('mode').contains('attributes')}")
 @Order(0)
 class AttributesRunner implements ApplicationRunner {
-    private final Executor executor;
-    private final int parallelism;
-
     private final SantechItemSource source;
+    private final ProgressBarFactory progressBarFactory;
 
     private final SantechItemAttribute<SantechIdentifier> santechIdentifierSantechItemAttribute;
     private final SantechItemAttribute<String> categoryAttribute;
     private final SantechItemAttribute<Map<String, String>> propertiesAttribute;
 
+    private final SantechItemAttributeWarmup warmup;
+
     private final AttributeBookWriter book;
-    private final ProgressBar bar;
 
     @Value("${attributes.out-path}")
     private Path outPath;
@@ -52,18 +49,13 @@ class AttributesRunner implements ApplicationRunner {
     @SneakyThrows
     @Override
     public void run(ApplicationArguments args) {
-        try (book; bar) {
+        warmup.warmup(
+                santechIdentifierSantechItemAttribute,
+                categoryAttribute,
+                propertiesAttribute
+        );
 
-            // warm up attributes
-            source.items()
-                    .peek(item -> {
-                        item.attribute(santechIdentifierSantechItemAttribute);
-                        item.attribute(categoryAttribute);
-                        item.attribute(propertiesAttribute);
-                    })
-                    .collect(parallel(__ -> bar.step(), counting(), executor, parallelism))
-                    .join();
-
+        try (book; var bar = progressBarFactory.createProgressBar("Attributes book")) {
             record CategoryWithProperties(
                     String group,
                     Collection<String> properties
@@ -91,7 +83,8 @@ class AttributesRunner implements ApplicationRunner {
             book.setAvailablePropertiesForGroup(availablePropertiesForGroup);
 
             source.items()
-                    .forEach(this::addItemToWorkbook);
+                    .peek(this::addItemToWorkbook)
+                    .forEach(__ -> bar.step());
 
             book.save(outPath);
             log.info("Saved {} at {}", outPath.getFileName(), outPath.toAbsolutePath());

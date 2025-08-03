@@ -2,13 +2,14 @@ package me.supcheg.sanparser.runner;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.supcheg.sanparser.progress.ProgressBarFactory;
 import me.supcheg.sanparser.santech.LocalIdentifier;
 import me.supcheg.sanparser.santech.SantechIdentifier;
 import me.supcheg.sanparser.santech.SantechItem;
 import me.supcheg.sanparser.santech.attribute.SantechItemAttribute;
+import me.supcheg.sanparser.santech.attribute.warmup.SantechItemAttributeWarmup;
 import me.supcheg.sanparser.santech.local.LocalIdentifierLookup;
 import me.supcheg.sanparser.santech.source.SantechItemSource;
-import me.tongfei.progressbar.ProgressBar;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,20 +35,27 @@ import static com.pivovarit.function.ThrowingConsumer.sneaky;
 @Order(0)
 class VariantsCsvRunner implements ApplicationRunner {
     private final SantechItemSource source;
+    private final ProgressBarFactory progressBarFactory;
 
     private final SantechItemAttribute<SantechIdentifier> santechIdentifier;
     private final SantechItemAttribute<List<SantechIdentifier>> analoguesAttribute;
     private final SantechItemAttribute<List<SantechIdentifier>> associationsAttribute;
 
-    private final LocalIdentifierLookup localIdentifierLookup;
+    private final SantechItemAttributeWarmup warmup;
 
-    private final ProgressBar bar;
+    private final LocalIdentifierLookup localIdentifierLookup;
 
     @Value("${variants.out-path}")
     private Path outPath;
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+        warmup.warmup(
+                santechIdentifier,
+                analoguesAttribute,
+                associationsAttribute
+        );
+
         String[] headers = Stream.concat(
                 Stream.of("local_identifier"),
                 IntStream.rangeClosed(1, findMaxVariantsCount())
@@ -63,15 +71,13 @@ class VariantsCsvRunner implements ApplicationRunner {
         try (
                 var out = Files.newBufferedWriter(outPath);
                 var printer = new CSVPrinter(out, csvFormat);
-                bar
+                var bar = progressBarFactory.createProgressBar("Variants csv")
         ) {
             source.items()
                     .map(this::constructRecord)
                     .<List<String>>mapMulti(Optional::ifPresent)
-                    .forEach(sneaky(record -> {
-                        printer.printRecord(record);
-                        bar.step();
-                    }));
+                    .peek(sneaky(printer::printRecord))
+                    .forEach(__ -> bar.step());
         }
         log.info("Saved {} at {}", outPath.getFileName(), outPath.toAbsolutePath());
     }

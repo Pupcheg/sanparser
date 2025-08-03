@@ -9,8 +9,8 @@ import java.util.concurrent.Executors;
 @Configuration
 class ConcurrentConfiguration {
     @Bean
-    ExecutorService executor(int parallelism) {
-        return Executors.newFixedThreadPool(parallelism);
+    ExecutorService executor() {
+        return Executors.newVirtualThreadPerTaskExecutor();
     }
 
     @Bean
