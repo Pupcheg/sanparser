@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class TongfeiProgressBarFactory implements ProgressBarFactory {
+class TongfeiProgressBarFactory implements ProgressBarFactory {
     private final SantechItemSource source;
 
     @Override
