@@ -7,5 +7,7 @@ import java.util.stream.Stream;
 public interface SantechItemSource {
     Stream<SantechItem> items();
 
-    long rootSize();
+    default long rootSize() {
+        return items().count();
+    }
 }

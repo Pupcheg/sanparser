@@ -11,7 +11,7 @@ import org.springframework.web.client.RestClient;
 @Configuration
 class WebUriRecognizerConfiguration {
     @Bean
-    UriRecognizer webUriRecognizerConfiguration(
+    UriRecognizer webUriRecognizer(
             ApplicationArguments args,
             RestClient client,
             DelayFactory delayFactory

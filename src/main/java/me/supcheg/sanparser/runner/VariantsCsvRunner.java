@@ -8,16 +8,14 @@ import me.supcheg.sanparser.santech.SantechItem;
 import me.supcheg.sanparser.santech.attribute.SantechItemAttribute;
 import me.supcheg.sanparser.santech.local.LocalIdentifierLookup;
 import me.supcheg.sanparser.santech.source.SantechItemSource;
-import me.tongfei.progressbar.ConsoleProgressBarConsumer;
 import me.tongfei.progressbar.ProgressBar;
-import me.tongfei.progressbar.ProgressBarBuilder;
-import me.tongfei.progressbar.ProgressBarStyle;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Files;
@@ -32,18 +30,20 @@ import static com.pivovarit.function.ThrowingConsumer.sneaky;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-@ConditionalOnProperty(
-        name = "mode",
-        havingValue = "variants"
-)
+@ConditionalOnExpression("#{springApplicationArguments.containsOption('mode') && springApplicationArguments.getOptionValues('mode').contains('variants')}")
+@Order(0)
 class VariantsCsvRunner implements ApplicationRunner {
     private final SantechItemSource source;
+
     private final SantechItemAttribute<SantechIdentifier> santechIdentifier;
     private final SantechItemAttribute<List<SantechIdentifier>> analoguesAttribute;
     private final SantechItemAttribute<List<SantechIdentifier>> associationsAttribute;
+
     private final LocalIdentifierLookup localIdentifierLookup;
 
-    @Value("${variants.out_path}")
+    private final ProgressBar bar;
+
+    @Value("${variants.out-path}")
     private Path outPath;
 
     @Override
@@ -63,7 +63,7 @@ class VariantsCsvRunner implements ApplicationRunner {
         try (
                 var out = Files.newBufferedWriter(outPath);
                 var printer = new CSVPrinter(out, csvFormat);
-                var bar = buildProgressBar()
+                bar
         ) {
             source.items()
                     .map(this::constructRecord)
@@ -72,7 +72,6 @@ class VariantsCsvRunner implements ApplicationRunner {
                         printer.printRecord(record);
                         bar.step();
                     }));
-            log.info("Done");
         }
         log.info("Saved {} at {}", outPath.getFileName(), outPath.toAbsolutePath());
     }
@@ -115,15 +114,5 @@ class VariantsCsvRunner implements ApplicationRunner {
                         .map(localIdentifierLookup::findLocalIdentifier)
                         .mapMulti(Optional::ifPresent)
                 );
-    }
-
-    private ProgressBar buildProgressBar() {
-        return new ProgressBarBuilder()
-                .setTaskName("variants csv file")
-                .setStyle(ProgressBarStyle.ASCII)
-                .setInitialMax(source.rootSize())
-                .showSpeed()
-                .setConsumer(new ConsoleProgressBarConsumer(System.out))
-                .build();
     }
 }

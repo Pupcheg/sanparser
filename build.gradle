@@ -6,7 +6,7 @@ plugins {
 }
 
 group = 'me.supcheg'
-version = '2.1.1'
+version = '2.2.0'
 
 repositories {
     mavenCentral()
@@ -18,10 +18,11 @@ dependencies {
     implementation 'org.liquibase:liquibase-core'
 
     implementation 'org.jsoup:jsoup:1.17.2'
-    implementation 'me.tongfei:progressbar:0.10.0'
+    implementation 'me.tongfei:progressbar:0.10.1'
     implementation 'com.pivovarit:parallel-collectors:3.2.0'
     implementation 'com.google.guava:guava'
     implementation 'org.apache.commons:commons-csv:1.12.0'
+    implementation 'org.apache.poi:poi-ooxml:5.4.1'
     implementation 'com.pivovarit:throwing-function:1.6.1'
 
     compileOnly 'org.projectlombok:lombok'

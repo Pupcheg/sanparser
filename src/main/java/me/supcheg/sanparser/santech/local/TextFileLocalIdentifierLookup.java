@@ -28,11 +28,11 @@ import static java.util.stream.Collectors.toMap;
 class TextFileLocalIdentifierLookup implements LocalIdentifierLookup {
     private final Map<String, LocalIdentifier> nomenclatureNumber2localIdentifier = new HashMap<>();
 
-    @Value("${local_identifier.path}")
+    @Value("${local-identifier.path}")
     private Path localIdentifierPath;
 
     @Autowired
-    void loadTextFile(@Value("${local_identifier.split_pattern}") Pattern splitPattern) throws IOException {
+    void loadTextFile(@Value("${local-identifier.split-pattern}") Pattern splitPattern) throws IOException {
         if (!Files.exists(localIdentifierPath)) {
             log.warn("Local identifiers file not exists: {}", localIdentifierPath);
             return;

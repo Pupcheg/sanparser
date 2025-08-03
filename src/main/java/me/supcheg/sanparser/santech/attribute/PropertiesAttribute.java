@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.toUnmodifiableMap;
 
 @RequiredArgsConstructor
 @Component
@@ -56,6 +56,6 @@ class PropertiesAttribute extends CacheableSantechItemAttributeImpl<Map<String, 
                     String value = valueElement.text().strip();
                     return Pair.of(key, value);
                 })
-                .collect(toMap(Pair::getFirst, Pair::getSecond, (left, right) -> right));
+                .collect(toUnmodifiableMap(Pair::getFirst, Pair::getSecond, (left, right) -> right));
     }
 }

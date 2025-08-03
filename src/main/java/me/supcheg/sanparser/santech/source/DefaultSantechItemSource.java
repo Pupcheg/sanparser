@@ -6,8 +6,6 @@ import me.supcheg.sanparser.download.UriDownloader;
 import me.supcheg.sanparser.santech.SantechItem;
 import me.supcheg.sanparser.santech.repository.SantechItemRepository;
 import org.jsoup.nodes.Document;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.net.URI;
@@ -15,14 +13,11 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @RequiredArgsConstructor
-@Component
 class DefaultSantechItemSource implements SantechItemSource {
     private final UriDownloader uriDownloader;
     private final DocumentParser documentParser;
     private final SantechItemRepository itemRepository;
-
-    @Value("${santech.catalog-uri}")
-    private URI catalog;
+    private final URI catalog;
 
     @Override
     public Stream<SantechItem> items() {
@@ -34,10 +29,5 @@ class DefaultSantechItemSource implements SantechItemSource {
                 .filter(element -> element.tagName().equalsIgnoreCase("url"))
                 .map(element -> URI.create(element.ownText().strip()))
                 .map(itemRepository::item);
-    }
-
-    @Override
-    public long rootSize() {
-        return items().count();
     }
 }
