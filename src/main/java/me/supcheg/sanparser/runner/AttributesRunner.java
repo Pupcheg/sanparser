@@ -84,7 +84,7 @@ class AttributesRunner implements ApplicationRunner {
 
             source.items()
                     .peek(this::addItemToWorkbook)
-                    .forEach(__ -> bar.step());
+                    .forEach(bar::step);
 
             book.save(outPath);
             log.info("Saved {} at {}", outPath.getFileName(), outPath.toAbsolutePath());

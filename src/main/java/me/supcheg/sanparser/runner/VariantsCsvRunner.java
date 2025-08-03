@@ -77,7 +77,7 @@ class VariantsCsvRunner implements ApplicationRunner {
                     .map(this::constructRecord)
                     .<List<String>>mapMulti(Optional::ifPresent)
                     .peek(sneaky(printer::printRecord))
-                    .forEach(__ -> bar.step());
+                    .forEach(bar::step);
         }
         log.info("Saved {} at {}", outPath.getFileName(), outPath.toAbsolutePath());
     }

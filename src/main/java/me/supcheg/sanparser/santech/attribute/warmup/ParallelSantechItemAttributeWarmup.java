@@ -27,7 +27,7 @@ class ParallelSantechItemAttributeWarmup implements SantechItemAttributeWarmup {
         try (var bar = progressBarFactory.createProgressBar(titleFor(attributes))) {
             source.items()
                     .peek(item -> attributes.forEach(item::attribute))
-                    .collect(parallel(__ -> bar.step(), counting(), executor, parallelism))
+                    .collect(parallel(bar::step, counting(), executor, parallelism))
                     .join();
         }
     }
