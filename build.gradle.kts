@@ -19,7 +19,7 @@ dependencies {
     implementation("org.jsoup:jsoup:1.17.2")
     implementation("me.tongfei:progressbar:0.10.1")
     implementation("com.pivovarit:parallel-collectors:3.2.0")
-    implementation("com.google.guava:guava")
+    implementation("com.google.guava:guava:33.5.0-jre")
     implementation("org.apache.commons:commons-csv:1.12.0")
     implementation("org.apache.poi:poi-ooxml:5.4.1")
     implementation("com.pivovarit:throwing-function:1.6.1")
