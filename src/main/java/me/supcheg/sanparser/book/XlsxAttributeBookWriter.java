@@ -9,21 +9,15 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Scope("prototype")
-@Component
 class XlsxAttributeBookWriter implements AttributeBookWriter {
     private static final int SANTECH_IDENTIFIER_CELL_INDEX = 0;
     private static final int PROPERTIES_CELLS_DELTA = 1;
@@ -35,27 +29,18 @@ class XlsxAttributeBookWriter implements AttributeBookWriter {
     @Value("${santech.identifier-translation-name}")
     private String santechIdentifierTranslationName;
 
-    XlsxAttributeBookWriter() {
+    XlsxAttributeBookWriter(Map<String, ? extends Collection<String>> availablePropertiesForGroup) {
         workbook = new XSSFWorkbook();
         workbook.setMissingCellPolicy(Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
-
-        propertiesByGroup = Map.of();
-        cellIndexByGroupAndKey = ImmutableTable.of();
-    }
-
-    @Override
-    public void setAvailablePropertiesForGroup(Map<String, ? extends Collection<String>> availablePropertiesForGroup) {
 
         Map<String, List<String>> propertiesByGroup = new HashMap<>();
         Table<String, String, Integer> cellIndexByGroupAndKey = HashBasedTable.create();
 
         for (var entry : availablePropertiesForGroup.entrySet()) {
-            String group = entry.getKey();
-            group = normalizeSheetName(group);
-
-            List<String> properties = new ArrayList<>(entry.getValue());
-            properties.sort(Comparator.naturalOrder());
-            properties = List.copyOf(properties);
+            String group = normalizeSheetName(entry.getKey());
+            List<String> properties = entry.getValue().stream()
+                    .sorted()
+                    .toList();
 
             propertiesByGroup.put(group, properties);
 

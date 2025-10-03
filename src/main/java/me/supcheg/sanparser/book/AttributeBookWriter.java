@@ -9,8 +9,6 @@ import java.util.Collection;
 import java.util.Map;
 
 public interface AttributeBookWriter extends Closeable {
-    void setAvailablePropertiesForGroup(Map<String, ? extends Collection<String>> availablePropertiesForGroup);
-
     void put(String group, SantechIdentifier identifier, Map<String, String> values);
 
     void save(Path outPath) throws IOException;
