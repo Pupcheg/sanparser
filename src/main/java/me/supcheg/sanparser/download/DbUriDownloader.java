@@ -5,7 +5,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import me.supcheg.sanparser.data.url.DownloadedUrl;
 import me.supcheg.sanparser.data.url.DownloadedUrlRepository;
-import org.hibernate.engine.jdbc.BlobProxy;
+import org.hibernate.engine.jdbc.proxy.BlobProxy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 

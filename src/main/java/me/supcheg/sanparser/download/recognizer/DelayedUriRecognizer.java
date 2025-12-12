@@ -1,6 +1,5 @@
 package me.supcheg.sanparser.download.recognizer;
 
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import me.supcheg.sanparser.delay.DelayFactory;
 
@@ -8,11 +7,10 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Optional;
 
-@RequiredArgsConstructor
-public class DelayedUriRecognizer implements UriRecognizer {
-    private final UriRecognizer delegate;
-    private final DelayFactory delayFactory;
-
+public record DelayedUriRecognizer(
+        UriRecognizer delegate,
+        DelayFactory delayFactory
+) implements UriRecognizer {
     @Override
     public boolean canRecognize(URI uri) {
         return delegate.canRecognize(uri);

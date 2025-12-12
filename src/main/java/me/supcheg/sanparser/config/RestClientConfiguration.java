@@ -16,8 +16,8 @@ class RestClientConfiguration {
                 .defaultHeaders(httpHeaders -> httpHeaders
                         .add("Cookie", cookie)
                 )
-                .messageConverters(messageConverters -> messageConverters
-                        .add(new FormHttpMessageConverter())
+                .configureMessageConverters(messageConverters -> messageConverters
+                        .withXmlConverter(new FormHttpMessageConverter())
                 )
                 .build();
     }

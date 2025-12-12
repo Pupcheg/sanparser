@@ -6,7 +6,7 @@ import java.util.Optional;
 public interface ProgressBar extends Closeable {
     void step();
 
-    default Object step(Object ignored) {
+    default Object step(Object... ignored) {
         step();
         return Optional.empty();
     }

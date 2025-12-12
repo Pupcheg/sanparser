@@ -1,6 +1,5 @@
 package me.supcheg.sanparser.santech.attribute;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.RequiredArgsConstructor;
 import me.supcheg.sanparser.santech.SantechIdentifier;
 import me.supcheg.sanparser.santech.SantechItem;
@@ -11,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClient;
+import tools.jackson.core.type.TypeReference;
 
 import java.net.URI;
 import java.util.List;

@@ -1,12 +1,12 @@
 package me.supcheg.sanparser.santech.cache.database;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import me.supcheg.sanparser.data.attribute.AttributeCache;
 import me.supcheg.sanparser.santech.attribute.cacheable.CacheableSantechItemAttribute;
 import me.supcheg.sanparser.santech.cache.AttributeCacheEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.ObjectMapper;
 
 import java.net.URI;
 import java.util.HashMap;

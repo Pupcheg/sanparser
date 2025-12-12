@@ -1,15 +1,14 @@
 package me.supcheg.sanparser.data.type;
 
 import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.type.SqlTypes;
+import org.hibernate.type.descriptor.WrapperOptions;
 import org.hibernate.usertype.EnhancedUserType;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Objects;
 
 abstract class StringConvertingImmutableType<T extends Serializable> implements EnhancedUserType<T> {
     @Override
@@ -28,23 +27,18 @@ abstract class StringConvertingImmutableType<T extends Serializable> implements 
     }
 
     @Override
-    public boolean equals(T x, T y) {
-        return Objects.equals(x, y);
-    }
-
-    @Override
     public int hashCode(T x) {
         return x == null ? 0 : x.hashCode();
     }
 
     @Override
-    public T nullSafeGet(ResultSet rs, int position, SharedSessionContractImplementor session, Object owner) throws SQLException {
+    public T nullSafeGet(ResultSet rs, int position, WrapperOptions options) throws SQLException {
         String raw = rs.getString(position);
         return raw == null ? null : fromStringValue(raw);
     }
 
     @Override
-    public void nullSafeSet(PreparedStatement st, T value, int index, SharedSessionContractImplementor session) throws SQLException {
+    public void nullSafeSet(PreparedStatement st, T value, int index, WrapperOptions options) throws SQLException {
         if (value == null) {
             st.setNull(index, getSqlType());
             return;

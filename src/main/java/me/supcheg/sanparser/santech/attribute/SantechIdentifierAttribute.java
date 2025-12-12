@@ -1,7 +1,5 @@
 package me.supcheg.sanparser.santech.attribute;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import me.supcheg.sanparser.santech.SantechIdentifier;
@@ -10,6 +8,8 @@ import me.supcheg.sanparser.santech.attribute.cacheable.CacheableSantechItemAttr
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.Objects;
 import java.util.Optional;

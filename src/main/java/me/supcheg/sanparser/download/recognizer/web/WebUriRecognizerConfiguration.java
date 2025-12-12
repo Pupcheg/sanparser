@@ -18,7 +18,7 @@ class WebUriRecognizerConfiguration {
     ) {
         UriRecognizer webUriRecognizer = new WebUriRecognizer(client);
 
-        if (!args.getOptionValues("download-mode").contains("no-delay")) {
+        if (!args.containsOption("download-mode") || !args.getOptionValues("download-mode").contains("no-delay")) {
             webUriRecognizer = new DelayedUriRecognizer(webUriRecognizer, delayFactory);
         }
 

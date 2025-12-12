@@ -1,6 +1,5 @@
 package me.supcheg.sanparser.santech.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import me.supcheg.sanparser.document.DocumentParser;
 import me.supcheg.sanparser.santech.SantechIdentifier;
@@ -9,8 +8,8 @@ import me.supcheg.sanparser.santech.repository.SantechItemRepository;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient.RequestHeadersSpec.ConvertibleClientHttpResponse;
+import tools.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -27,10 +26,10 @@ class DefaultSantechIdentiferListExchangeFunction implements SantechIdentiferLis
 
     @Override
     public List<SantechIdentifier> exchange(HttpRequest request,
-                                            ConvertibleClientHttpResponse response) throws IOException {
+                                            ConvertibleClientHttpResponse response) {
         String content = objectMapper.readTree(response.bodyTo(String.class))
                 .path("content")
-                .textValue();
+                .stringValue();
 
         return documentParser.parse(content)
                 .stream()

@@ -1,6 +1,5 @@
 package me.supcheg.sanparser.download.recognizer.web;
 
-import lombok.RequiredArgsConstructor;
 import me.supcheg.sanparser.download.recognizer.UriRecognizer;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
@@ -12,10 +11,9 @@ import java.util.Optional;
 
 import static lombok.Lombok.sneakyThrow;
 
-@RequiredArgsConstructor
-class WebUriRecognizer implements UriRecognizer {
-    private final RestClient client;
-
+record WebUriRecognizer(
+        RestClient client
+) implements UriRecognizer {
     @Override
     public boolean canRecognize(URI uri) {
         return uri.getScheme().equals("http") || uri.getScheme().equals("https");
@@ -24,10 +22,10 @@ class WebUriRecognizer implements UriRecognizer {
     @Override
     public Optional<InputStream> recognize(URI uri) {
         try {
-            return Optional.ofNullable(
+            return Optional.of(
                     client.get()
                             .uri(uri)
-                            .exchange((request, response) -> response.getBody(), false)
+                            .exchange((_, response) -> response.getBody(), false)
             );
         } catch (ResourceAccessException ex) {
             Throwable cause = ex.getCause();

@@ -1,6 +1,5 @@
 package me.supcheg.sanparser.santech.source;
 
-import lombok.RequiredArgsConstructor;
 import me.supcheg.sanparser.document.DocumentParser;
 import me.supcheg.sanparser.download.UriDownloader;
 import me.supcheg.sanparser.santech.SantechItem;
@@ -12,13 +11,12 @@ import java.net.URI;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-@RequiredArgsConstructor
-class DefaultSantechItemSource implements SantechItemSource {
-    private final UriDownloader uriDownloader;
-    private final DocumentParser documentParser;
-    private final SantechItemRepository itemRepository;
-    private final URI catalog;
-
+record DefaultSantechItemSource(
+        UriDownloader uriDownloader,
+        DocumentParser documentParser,
+        SantechItemRepository itemRepository,
+        URI catalog
+) implements SantechItemSource {
     @Override
     public Stream<SantechItem> items() {
         return Stream.of(catalog)
