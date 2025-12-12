@@ -17,7 +17,7 @@ class RestClientConfiguration {
                         .add("Cookie", cookie)
                 )
                 .configureMessageConverters(messageConverters -> messageConverters
-                        .withXmlConverter(new FormHttpMessageConverter())
+                        .addCustomConverter(new FormHttpMessageConverter())
                 )
                 .build();
     }
