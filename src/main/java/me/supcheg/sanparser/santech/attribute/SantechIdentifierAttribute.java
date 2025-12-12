@@ -29,7 +29,8 @@ class SantechIdentifierAttribute extends CacheableSantechItemAttributeImpl<Sante
 
     @Override
     public TypeReference<SantechIdentifier> type() {
-        return new TypeReference<>() {};
+        return new TypeReference<>() {
+        };
     }
 
     @Override

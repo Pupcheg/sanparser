@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3.0.0
+      author: supcheg
+      changes:
+        - sqlFile:
+            relativeToChangelogFile: true
+            path: 1-santech-category-update.sql

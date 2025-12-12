@@ -2,6 +2,7 @@ package me.supcheg.sanparser.santech.attribute;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.RequiredArgsConstructor;
+import me.supcheg.sanparser.santech.SantechCategory;
 import me.supcheg.sanparser.santech.SantechItem;
 import me.supcheg.sanparser.santech.attribute.cacheable.CacheableSantechItemAttributeImpl;
 import org.jsoup.nodes.Document;
@@ -13,7 +14,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
-class CategoryAttribute extends CacheableSantechItemAttributeImpl<String> {
+class CategoryAttribute extends CacheableSantechItemAttributeImpl<SantechCategory> {
     private final SantechItemAttribute<Document> document;
 
     @Override
@@ -22,17 +23,18 @@ class CategoryAttribute extends CacheableSantechItemAttributeImpl<String> {
     }
 
     @Override
-    public TypeReference<String> type() {
-        return new TypeReference<>() {};
+    public TypeReference<SantechCategory> type() {
+        return new TypeReference<>() {
+        };
     }
 
     @Override
-    public Optional<String> findIternal(SantechItem attributed) {
+    public Optional<SantechCategory> findIternal(SantechItem attributed) {
         return attributed.attribute(document)
                 .flatMap(CategoryAttribute::resolveCategory);
     }
 
-    private static Optional<String> resolveCategory(Document doc) {
+    private static Optional<SantechCategory> resolveCategory(Document doc) {
         return doc.stream()
                 .filter(element -> element.className().strip().equals("ss-breadcrumbs"))
                 .map(element -> {
@@ -43,6 +45,7 @@ class CategoryAttribute extends CacheableSantechItemAttributeImpl<String> {
                     Objects.requireNonNull(preLastCategoryElement);
                     return preLastCategoryElement.text().strip();
                 })
+                .map(SantechCategory::new)
                 .findFirst();
     }
 }

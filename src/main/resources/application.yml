@@ -20,7 +20,9 @@ local-identifier:
   path: ./local_ids.txt
   split-pattern: \t
 variants:
-  out-path: ./variants.csv
+  out-path: ./variants.xlsx
+  sheet-translation-name: 'Варианты'
+  indexed-variant-translation-name: 'Вариант %d'
 attributes:
   out-path: ./attributes.xlsx
 santech:

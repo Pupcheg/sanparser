@@ -2,6 +2,9 @@ package me.supcheg.sanparser.runner;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.supcheg.sanparser.book.variant.VariantBookWriter.VariantBookEntry;
+import me.supcheg.sanparser.book.variant.VariantBookWriterFactory;
+import me.supcheg.sanparser.condition.ConditionalOnMode;
 import me.supcheg.sanparser.progress.ProgressBarFactory;
 import me.supcheg.sanparser.santech.LocalIdentifier;
 import me.supcheg.sanparser.santech.SantechIdentifier;
@@ -10,28 +13,22 @@ import me.supcheg.sanparser.santech.attribute.SantechItemAttribute;
 import me.supcheg.sanparser.santech.attribute.warmup.SantechItemAttributeWarmup;
 import me.supcheg.sanparser.santech.local.LocalIdentifierLookup;
 import me.supcheg.sanparser.santech.source.SantechItemSource;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
-
-import static com.pivovarit.function.ThrowingConsumer.sneaky;
 
 @Slf4j
 @RequiredArgsConstructor
 @Component
-@ConditionalOnExpression("#{springApplicationArguments.containsOption('mode') && springApplicationArguments.getOptionValues('mode').contains('variants')}")
+@ConditionalOnMode("variants")
 @Order(0)
 class VariantsCsvRunner implements ApplicationRunner {
     private final SantechItemSource source;
@@ -44,6 +41,7 @@ class VariantsCsvRunner implements ApplicationRunner {
     private final SantechItemAttributeWarmup warmup;
 
     private final LocalIdentifierLookup localIdentifierLookup;
+    private final VariantBookWriterFactory bookFactory;
 
     @Value("${variants.out-path}")
     private Path outPath;
@@ -56,30 +54,18 @@ class VariantsCsvRunner implements ApplicationRunner {
                 associationsAttribute
         );
 
-        String[] headers = Stream.concat(
-                Stream.of("local_identifier"),
-                IntStream.rangeClosed(1, findMaxVariantsCount())
-                        .mapToObj(index -> "association-" + index)
-        ).toArray(String[]::new);
-
-        CSVFormat csvFormat = CSVFormat.EXCEL.builder()
-                .setDelimiter(';')
-                .setHeader(headers)
-                .setAutoFlush(true)
-                .build();
-
         try (
-                var out = Files.newBufferedWriter(outPath);
-                var printer = new CSVPrinter(out, csvFormat);
-                var bar = progressBarFactory.createProgressBar("Variants csv")
+                var book = bookFactory.newWriter(findMaxVariantsCount());
+                var bar = progressBarFactory.createProgressBar("Variants book")
         ) {
             source.items()
                     .map(this::constructRecord)
-                    .<List<String>>mapMulti(Optional::ifPresent)
-                    .peek(sneaky(printer::printRecord))
+                    .<VariantBookEntry>mapMulti(Optional::ifPresent)
+                    .peek(book::append)
                     .forEach(bar::step);
+            book.save(outPath);
+            log.info("Saved {} at {}", outPath.getFileName(), outPath.toAbsolutePath());
         }
-        log.info("Saved {} at {}", outPath.getFileName(), outPath.toAbsolutePath());
     }
 
     private int findMaxVariantsCount() {
@@ -90,35 +76,28 @@ class VariantsCsvRunner implements ApplicationRunner {
     }
 
     private int allVariantsCount(SantechItem item) {
-        return item.attribute(analoguesAttribute).map(List::size).orElse(0)
-               + item.attribute(associationsAttribute).map(List::size).orElse(0);
+        return Stream.of(analoguesAttribute, associationsAttribute)
+                .map(item::attribute)
+                .<List<?>>mapMulti(Optional::ifPresent)
+                .mapToInt(List::size)
+                .sum();
     }
 
-    private Optional<List<String>> constructRecord(SantechItem item) {
+    private Optional<VariantBookEntry> constructRecord(SantechItem item) {
         return item.attribute(this.santechIdentifier)
-                .filter(santechIdentifier ->
-                        localIdentifierLookup.findLocalIdentifier(santechIdentifier).isPresent()
-                )
-                .map(localIdentifier ->
-                        Stream.concat(
-                                        Stream.of(localIdentifier.nomenclatureNumber()),
-                                        Stream.concat(
-                                                toLocalIdentifierStream(item.attribute(analoguesAttribute))
-                                                        .map(LocalIdentifier::value),
-                                                toLocalIdentifierStream(item.attribute(associationsAttribute))
-                                                        .map(LocalIdentifier::value)
-                                        )
-                                )
-                                .distinct()
-                                .toList()
-                );
-    }
-
-    private Stream<LocalIdentifier> toLocalIdentifierStream(Optional<List<SantechIdentifier>> variants) {
-        return variants.map(List::stream).stream()
-                .flatMap(stream -> stream
-                        .map(localIdentifierLookup::findLocalIdentifier)
-                        .mapMulti(Optional::ifPresent)
+                .filter(localIdentifierLookup::hasLocalIdentifier)
+                .map(santechIdentifier ->
+                        new VariantBookEntry(
+                                santechIdentifier,
+                                Stream.of(analoguesAttribute, associationsAttribute)
+                                        .map(item::attribute)
+                                        .<List<SantechIdentifier>>mapMulti(Optional::ifPresent)
+                                        .flatMap(Collection::stream)
+                                        .map(localIdentifierLookup::findLocalIdentifier)
+                                        .<LocalIdentifier>mapMulti(Optional::ifPresent)
+                                        .distinct()
+                                        .toList()
+                        )
                 );
     }
 }

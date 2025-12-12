@@ -35,7 +35,8 @@ class AssociationsAttribute extends CacheableSantechItemAttributeImpl<List<Sante
 
     @Override
     public TypeReference<List<SantechIdentifier>> type() {
-        return new TypeReference<>() {};
+        return new TypeReference<>() {
+        };
     }
 
     @Override

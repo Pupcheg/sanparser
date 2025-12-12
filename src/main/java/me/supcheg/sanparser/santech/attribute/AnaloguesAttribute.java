@@ -35,7 +35,8 @@ class AnaloguesAttribute extends CacheableSantechItemAttributeImpl<List<SantechI
 
     @Override
     public TypeReference<List<SantechIdentifier>> type() {
-        return new TypeReference<>() {};
+        return new TypeReference<>() {
+        };
     }
 
     @Override

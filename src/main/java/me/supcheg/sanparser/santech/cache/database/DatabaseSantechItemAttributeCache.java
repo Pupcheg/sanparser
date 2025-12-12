@@ -3,8 +3,8 @@ package me.supcheg.sanparser.santech.cache.database;
 import lombok.RequiredArgsConstructor;
 import me.supcheg.sanparser.santech.SantechItem;
 import me.supcheg.sanparser.santech.attribute.cacheable.CacheableSantechItemAttribute;
-import me.supcheg.sanparser.santech.cache.ProvidingSantechItemAttributeCache;
 import me.supcheg.sanparser.santech.cache.AttributeCacheEntry;
+import me.supcheg.sanparser.santech.cache.ProvidingSantechItemAttributeCache;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 

@@ -1,24 +1,26 @@
-package me.supcheg.sanparser.book;
+package me.supcheg.sanparser.book.attribute;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.ImmutableTable;
 import com.google.common.collect.Table;
-import me.supcheg.sanparser.santech.SantechIdentifier;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class XlsxAttributeBookWriter implements AttributeBookWriter {
+@Scope("prototype")
+@Component
+public class XlsxAttributeBookWriter implements AttributeBookWriter {
     private static final int SANTECH_IDENTIFIER_CELL_INDEX = 0;
     private static final int PROPERTIES_CELLS_DELTA = 1;
 
@@ -29,23 +31,25 @@ class XlsxAttributeBookWriter implements AttributeBookWriter {
     @Value("${santech.identifier-translation-name}")
     private String santechIdentifierTranslationName;
 
-    XlsxAttributeBookWriter(Map<String, ? extends Collection<String>> availablePropertiesForGroup) {
+    XlsxAttributeBookWriter() {
         workbook = new XSSFWorkbook();
-        workbook.setMissingCellPolicy(Row.MissingCellPolicy.CREATE_NULL_AS_BLANK);
 
+        propertiesByGroup = Map.of();
+        cellIndexByGroupAndKey = ImmutableTable.of();
+    }
+
+    public void setAvailablePropertiesForGroup(List<CategoryWithProperties> availablePropertiesForGroup) {
         Map<String, List<String>> propertiesByGroup = new HashMap<>();
         Table<String, String, Integer> cellIndexByGroupAndKey = HashBasedTable.create();
 
-        for (var entry : availablePropertiesForGroup.entrySet()) {
-            String group = normalizeSheetName(entry.getKey());
-            List<String> properties = entry.getValue().stream()
-                    .sorted()
-                    .toList();
+        for (var entry : availablePropertiesForGroup) {
+            String category = normalizeSheetName(entry.category().name());
+            List<String> properties = entry.properties().stream().sorted().toList();
 
-            propertiesByGroup.put(group, properties);
+            propertiesByGroup.put(category, properties);
 
             for (int index = 0; index < properties.size(); index++) {
-                cellIndexByGroupAndKey.put(group, properties.get(index), PROPERTIES_CELLS_DELTA + index);
+                cellIndexByGroupAndKey.put(category, properties.get(index), PROPERTIES_CELLS_DELTA + index);
             }
         }
 
@@ -54,15 +58,15 @@ class XlsxAttributeBookWriter implements AttributeBookWriter {
     }
 
     @Override
-    public void put(String group, SantechIdentifier identifier, Map<String, String> values) {
-        group = normalizeSheetName(group);
-        values = Map.copyOf(values);
+    public void append(AttributeBookEntry bookEntry) {
+        var group = normalizeSheetName(bookEntry.category().name());
+        var values = Map.copyOf(bookEntry.properties());
 
         Sheet sheet = sheet(group);
         Row row = nextRow(sheet);
 
-        row.getCell(SANTECH_IDENTIFIER_CELL_INDEX)
-                .setCellValue(identifier.nomenclatureNumber());
+        row.createCell(SANTECH_IDENTIFIER_CELL_INDEX)
+                .setCellValue(bookEntry.item().nomenclatureNumber());
 
         for (var entry : values.entrySet()) {
             String key = entry.getKey();
@@ -73,7 +77,7 @@ class XlsxAttributeBookWriter implements AttributeBookWriter {
                 throw new IllegalStateException("Not found cell index for group=%s and key=%s".formatted(group, key));
             }
 
-            row.getCell(cellIndex)
+            row.createCell(cellIndex)
                     .setCellValue(value);
         }
     }

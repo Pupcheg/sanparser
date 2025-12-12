@@ -28,7 +28,8 @@ class PropertiesAttribute extends CacheableSantechItemAttributeImpl<Map<String, 
 
     @Override
     public TypeReference<Map<String, String>> type() {
-        return new TypeReference<>() {};
+        return new TypeReference<>() {
+        };
     }
 
     @Override
@@ -38,7 +39,7 @@ class PropertiesAttribute extends CacheableSantechItemAttributeImpl<Map<String, 
     }
 
     private static Map<String, String> resolveProperties(Document doc) {
-       return doc.stream()
+        return doc.stream()
                 .filter(element -> element.className().strip().equals("ss-product-property"))
                 .map(Element::children)
                 .flatMap(Collection::stream)

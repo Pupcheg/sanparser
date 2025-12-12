@@ -7,4 +7,8 @@ import java.util.Optional;
 
 public interface LocalIdentifierLookup {
     Optional<LocalIdentifier> findLocalIdentifier(SantechIdentifier santechIdentifier);
+
+    default boolean hasLocalIdentifier(SantechIdentifier santechIdentifier) {
+        return findLocalIdentifier(santechIdentifier).isPresent();
+    }
 }
