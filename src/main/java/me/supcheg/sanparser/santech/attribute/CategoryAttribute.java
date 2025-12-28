@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.supcheg.sanparser.santech.SantechCategory;
 import me.supcheg.sanparser.santech.SantechItem;
 import me.supcheg.sanparser.santech.attribute.cacheable.CacheableSantechItemAttributeImpl;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
@@ -38,10 +39,10 @@ class CategoryAttribute extends CacheableSantechItemAttributeImpl<SantechCategor
         return doc.stream()
                 .filter(element -> element.className().strip().equals("ss-breadcrumbs"))
                 .map(element -> {
-                    Element categoryListElement = element.firstElementChild();
+                    @Nullable Element categoryListElement = element.firstElementChild();
                     Objects.requireNonNull(categoryListElement);
 
-                    Element preLastCategoryElement = categoryListElement.lastElementChild();
+                    @Nullable Element preLastCategoryElement = categoryListElement.lastElementChild();
                     Objects.requireNonNull(preLastCategoryElement);
                     return preLastCategoryElement.text().strip();
                 })

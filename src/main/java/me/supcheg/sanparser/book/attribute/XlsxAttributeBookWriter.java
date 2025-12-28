@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -72,7 +73,7 @@ public class XlsxAttributeBookWriter implements AttributeBookWriter {
             String key = entry.getKey();
             String value = entry.getValue();
 
-            Integer cellIndex = cellIndexByGroupAndKey.get(group, key);
+            @Nullable Integer cellIndex = cellIndexByGroupAndKey.get(group, key);
             if (cellIndex == null) {
                 throw new IllegalStateException("Not found cell index for group=%s and key=%s".formatted(group, key));
             }

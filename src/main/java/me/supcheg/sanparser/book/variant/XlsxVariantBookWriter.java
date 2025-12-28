@@ -5,6 +5,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,7 @@ public class XlsxVariantBookWriter implements VariantBookWriter {
     private static final int VARIANTS_CELLS_DELTA = 1;
 
     private final Workbook workbook;
+    @MonotonicNonNull
     private Sheet sheet;
     private int variantsAmount;
 

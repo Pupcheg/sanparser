@@ -1,5 +1,6 @@
 package me.supcheg.sanparser.data.type;
 
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.hibernate.HibernateException;
 import org.hibernate.type.SqlTypes;
 import org.hibernate.type.descriptor.WrapperOptions;
@@ -27,10 +28,11 @@ abstract class StringConvertingImmutableType<T extends Serializable> implements 
     }
 
     @Override
-    public int hashCode(T x) {
+    public int hashCode(@Nullable T x) {
         return x == null ? 0 : x.hashCode();
     }
 
+    @Nullable
     @Override
     public T nullSafeGet(ResultSet rs, int position, WrapperOptions options) throws SQLException {
         String raw = rs.getString(position);
@@ -38,7 +40,7 @@ abstract class StringConvertingImmutableType<T extends Serializable> implements 
     }
 
     @Override
-    public void nullSafeSet(PreparedStatement st, T value, int index, WrapperOptions options) throws SQLException {
+    public void nullSafeSet(PreparedStatement st, @Nullable T value, int index, WrapperOptions options) throws SQLException {
         if (value == null) {
             st.setNull(index, getSqlType());
             return;

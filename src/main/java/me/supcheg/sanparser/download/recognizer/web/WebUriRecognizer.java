@@ -38,7 +38,7 @@ record WebUriRecognizer(
                 return Optional.empty();
             }
 
-            throw sneakyThrow(cause); // lombok annotation processor will wrap this call and no runtime dependency will be provided
+            throw sneakyThrow(cause);
         }
     }
 }

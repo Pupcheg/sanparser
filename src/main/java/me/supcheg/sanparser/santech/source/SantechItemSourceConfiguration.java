@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.net.URI;
+import java.util.Objects;
 
 @Configuration
 class SantechItemSourceConfiguration {
@@ -30,7 +31,7 @@ class SantechItemSourceConfiguration {
         if (args.containsOption("items-limit")) {
             santechItemSource = new LimitedSantechItemSource(
                     santechItemSource,
-                    Integer.parseInt(args.getOptionValues("items-limit").getFirst())
+                    Integer.parseInt(Objects.requireNonNull(args.getOptionValues("items-limit")).getFirst())
             );
         }
 

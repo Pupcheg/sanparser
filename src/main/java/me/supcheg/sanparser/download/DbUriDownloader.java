@@ -43,7 +43,7 @@ class DbUriDownloader implements UriDownloader {
                         .url(uri)
                         .data(
                                 bytes.map(BlobProxy::generateProxy)
-                                        .orElse(null)
+                                        .orElseGet(() -> BlobProxy.generateProxy(new byte[0]))
                         )
                         .build()
         );

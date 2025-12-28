@@ -1,6 +1,8 @@
 package me.supcheg.sanparser.condition;
 
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
@@ -20,7 +22,7 @@ class ModeCondition implements Condition {
     }
 
     private static ApplicationArguments getArguments(ConditionContext ctx) {
-        var beanFactory = ctx.getBeanFactory();
+        @Nullable BeanFactory beanFactory = ctx.getBeanFactory();
         Objects.requireNonNull(beanFactory, () -> "no bean factory in %s".formatted(ctx));
 
         return beanFactory.getBean(ApplicationArguments.class);
@@ -31,7 +33,7 @@ class ModeCondition implements Condition {
     }
 
     private static Optional<String> findMode(AnnotatedTypeMetadata metadata) {
-        Map<String, Object> attributes = metadata.getAnnotationAttributes(ConditionalOnMode.class.getName());
+        @Nullable Map<String, @Nullable Object> attributes = metadata.getAnnotationAttributes(ConditionalOnMode.class.getName());
         if (attributes == null) {
             return Optional.empty();
         }

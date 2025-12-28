@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import me.supcheg.sanparser.santech.SantechIdentifier;
 import me.supcheg.sanparser.santech.SantechItem;
 import me.supcheg.sanparser.santech.attribute.cacheable.CacheableSantechItemAttributeImpl;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Component;
@@ -57,10 +58,10 @@ class SantechIdentifierAttribute extends CacheableSantechItemAttributeImpl<Sante
         return document.stream()
                 .filter(element -> element.ownText().strip().equals("Номенклатурный номер"))
                 .map(element -> {
-                    Element sibling = element.nextElementSibling();
+                    @Nullable Element sibling = element.nextElementSibling();
                     Objects.requireNonNull(sibling);
 
-                    Element numberElement = sibling.firstElementChild();
+                    @Nullable Element numberElement = sibling.firstElementChild();
                     Objects.requireNonNull(numberElement);
 
                     return numberElement.ownText().strip();

@@ -8,6 +8,7 @@ import me.supcheg.sanparser.santech.SantechItem;
 import me.supcheg.sanparser.santech.attribute.cacheable.CacheableSantechItemAttribute;
 import me.supcheg.sanparser.santech.cache.AttributeCacheEntry;
 import me.supcheg.sanparser.santech.cache.ListeningSantechItemAttributeCache;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +29,7 @@ class MemorySantechItemAttributeCache implements ListeningSantechItemAttributeCa
     @Override
     public <T> Optional<AttributeCacheEntry<T>> findEntry(SantechItem item, CacheableSantechItemAttribute<T> attribute) {
         @SuppressWarnings("unchecked")
-        AttributeCacheEntry<T> entry = (AttributeCacheEntry<T>) cache.get(attribute, item.uri());
+        @Nullable AttributeCacheEntry<T> entry = (AttributeCacheEntry<T>) cache.get(attribute, item.uri());
         return Optional.ofNullable(entry);
     }
 

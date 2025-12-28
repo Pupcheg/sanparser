@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.hibernate.annotations.UuidGenerator;
 
 import java.net.URI;
@@ -28,5 +29,6 @@ public class AttributeCache {
     @Column(nullable = false)
     private String attributeKey;
 
+    @Nullable
     private String jsonValue;
 }

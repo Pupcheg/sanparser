@@ -16,6 +16,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-liquibase")
 
+    implementation("org.checkerframework:checker-qual:3.52.1")
     implementation("org.jsoup:jsoup:1.21.2")
     implementation("me.tongfei:progressbar:0.10.1")
     implementation("com.pivovarit:parallel-collectors:3.4.0")

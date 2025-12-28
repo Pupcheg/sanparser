@@ -6,11 +6,13 @@ import me.supcheg.sanparser.document.DocumentParser;
 import me.supcheg.sanparser.document.DocumentReference;
 import me.supcheg.sanparser.download.UriDownloader;
 import me.supcheg.sanparser.santech.SantechItem;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jsoup.nodes.Document;
 import org.springframework.stereotype.Component;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -45,7 +47,7 @@ class DocumentReferenceAttribute implements SantechItemAttribute<DocumentReferen
     @AllArgsConstructor
     static class DocumentReferenceImpl implements DocumentReference {
         private final Supplier<Document> supplier;
-        private volatile Reference<Document> cache;
+        private volatile Reference<@Nullable Document> cache;
 
         public DocumentReferenceImpl(Supplier<Document> supplier, Document document) {
             this.supplier = supplier;
@@ -63,7 +65,7 @@ class DocumentReferenceAttribute implements SantechItemAttribute<DocumentReferen
                     }
                 }
             }
-            return cache.get();
+            return Objects.requireNonNull(cache.get());
         }
     }
 }
